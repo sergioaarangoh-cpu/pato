@@ -1,2 +1,1 @@
-# pato
-pato is available
+# NADA en rama main hasta el final, todo en dev
