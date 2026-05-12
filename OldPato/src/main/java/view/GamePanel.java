@@ -1,6 +1,6 @@
 package view;
 
-import main.java.model.Duck;
+import model.Duck;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,12 +18,13 @@ public class GamePanel extends JPanel {
      * Crea el panel, carga las imagenes iniciales e inicia los hilos de los patos.
      */
     public GamePanel() {
-        fondo = new ImageIcon("OldPato/src/main/resources/images/background.png").getImage();
+        fondo = new ImageIcon("src\\main\\resources\\images\\background.png").getImage();
         ducks = new ArrayList<>();
+        System.out.println(new java.io.File("").getAbsolutePath());
 
-        ducks.add(new Duck(100, 100, 900, 700, "OldPato/src/main/resources/images/duck.png"));
-        ducks.add(new Duck(300, 200, 900, 700, "OldPato/src/main/resources/images/duck.png"));
-        ducks.add(new Duck(500, 300, 900, 700, "OldPato/src/main/resources/images/duck.png"));
+        ducks.add(new Duck(100, 100, 900, 700, "src\\main\\resources\\images\\duckleft.png"));
+        ducks.add(new Duck(300, 200, 900, 700, "src\\main\\resources\\images\\duckleft.png"));
+        ducks.add(new Duck(500, 300, 900, 700, "src\\main\\resources\\images\\duckright.png"));
 
         for (Duck duck : ducks) {
             Thread hiloDuck = new Thread(duck);

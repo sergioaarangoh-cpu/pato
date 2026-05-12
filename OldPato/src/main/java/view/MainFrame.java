@@ -7,7 +7,7 @@ public class MainFrame extends JFrame {
         GamePanel panel = new GamePanel();
         add(panel);
 
-        setTitle("PATO");
+        setTitle("OldPato");
         setSize(900,700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
