@@ -1,8 +1,8 @@
-package main.java.view;
+package view;
 
 
 
-import main.java.model.Duck;
+import model.Duck;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,9 +14,9 @@ import java.util.List;
  */
 public class GamePanel extends JPanel {
     // "/" porque Java lo interpreta bien tanto en Linux como en Windows.
-    private static final String BACKGROUND_IMAGE = "OldPato/src/main/resources/images/background.png";
-    private static final String DUCK_LEFT_IMAGE = "OldPato/src/main/resources/images/duckleft.png";
-    private static final String DUCK_RIGHT_IMAGE = "OldPato/src/main/resources/images/duckright.png";
+    private static final String BACKGROUND_IMAGE = "resources/images/background.png";
+    private static final String DUCK_LEFT_IMAGE = "OldPato\\src\\main\\resources\\images\\duckleft.png";
+    private static final String DUCK_RIGHT_IMAGE = "OldPato\\src\\main\\resources\\images\\duckright.png";
 
     private Image fondo;
     private List<Duck> ducks;

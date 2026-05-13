@@ -1,6 +1,5 @@
-package main.java.view;
+package view;
 
-import main.java.view.GamePanel;
 
 import model.GameState;
 
