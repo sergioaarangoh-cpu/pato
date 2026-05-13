@@ -10,7 +10,7 @@ public class Duck implements Runnable {
     private int x;
     private int y;
     private int speedX;
-    //private int speedY;
+    private int speedY;
     private int panelWidth;
     private int panelHeight;
     private Image sprite;
@@ -29,17 +29,22 @@ public class Duck implements Runnable {
         this.y = y;
         this.panelWidth = panelWidth;
         this.panelHeight = panelHeight;
-        speedX = (int) (Math.random() * 8) - 3;
-        //speedY = (int) (Math.random() * 8) - 3;
 
+        speedX = (int) (Math.random() * 8) - 3;
+        speedY = (int) (Math.random() * 8) - 3;
+
+        // Aqui podremos obtener de manera aleatoria la velocidad para despues ser utilizada individualmente en cada pato.
+        speedX = (int) (Math.random() * 7) - 3;
+        speedY = (int) (Math.random() * 7) - 3;
+
+        // Esto es por si el pato queda en 0 no se sienta interrumpida la animacion y se vea fluido ( mejor dicho que no pare)
         if (speedX == 0) {
             speedX = 1;
         }
 
-        /**if (speedY == 0) {
+        if (speedY == 0) {
             speedY = 1;
         }
-         **/
         sprite = new ImageIcon(imagePath).getImage();
     }
 
@@ -69,16 +74,16 @@ public class Duck implements Runnable {
      */
     public void move(int panelWidth, int panelHeight) {
         x += speedX;
-        //y += speedY;
+        y += speedY;
 
-        if (x <= 0 || x >= panelWidth ) {
+        if (x <= 0 || x >= panelWidth - 80) {
             speedX *= -1;
         }
 
-        /**if (y <= 0 || y >= panelHeight  ){
+
+        if (y <= 0 || y >= panelHeight - 80) {
             speedY *= -1;
         }
-         **/
     }
 
     /**
