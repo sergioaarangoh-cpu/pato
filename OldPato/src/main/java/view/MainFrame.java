@@ -1,14 +1,12 @@
 package main.java.view;
 
-import main.java.view.GamePanel;
-
 import model.GameState;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
-    public  MainFrame(){
+    public MainFrame() {
         GameState gameState = new GameState();
 
         //Con layeredpane se pone el HUD encima del panel de juego
@@ -18,7 +16,7 @@ public class MainFrame extends JFrame {
         GamePanel gamePanel = new GamePanel();
         gamePanel.setBounds(0, 0, 900, 700);
 
-        HUD hud = new HUD(gameState);
+        view.HUD hud = new view.HUD(gameState);
         hud.setBounds(0, 0, 900, 700);
 
         layeredPane.add(gamePanel, JLayeredPane.DEFAULT_LAYER);
@@ -35,7 +33,7 @@ public class MainFrame extends JFrame {
 
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         new MainFrame();
 
     }

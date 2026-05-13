@@ -1,8 +1,7 @@
 package main.java.view;
 
 
-
-import main.java.model.Duck;
+import model.Duck;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +25,7 @@ public class GamePanel extends JPanel {
      */
     public GamePanel() {
         fondo = new ImageIcon(BACKGROUND_IMAGE).getImage();
-         ducks = new ArrayList<>();
+        ducks = new ArrayList<>();
 
         ducks.add(new Duck(100, 100, 900, 700, DUCK_LEFT_IMAGE));
         ducks.add(new Duck(300, 200, 900, 700, DUCK_LEFT_IMAGE));
@@ -60,7 +59,7 @@ public class GamePanel extends JPanel {
             graphics.setColor(Color.BLACK);
             graphics.fillRect(0, 0, getWidth(), getHeight());
         }
-        
+
         Color color = new Color(37, 111, 186);
         graphics.setColor(color);
         graphics.setFont(new Font("Arial", Font.BOLD, 24));
