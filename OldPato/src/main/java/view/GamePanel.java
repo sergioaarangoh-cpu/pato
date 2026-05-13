@@ -58,7 +58,7 @@ public class GamePanel extends JPanel {
         Color color = new Color(37, 111, 186);
         graphics.setColor(color);
         graphics.setFont(new Font("Arial", Font.BOLD, 24));
-        graphics.drawString("Duck Hunt", 100, 50);
+        graphics.drawString("OldPato", 100, 50);
 
         for (Duck duck : ducks) {
             duck.draw(graphics);

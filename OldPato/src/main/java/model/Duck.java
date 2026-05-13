@@ -10,7 +10,7 @@ public class Duck implements Runnable {
     private int x;
     private int y;
     private int speedX;
-    private int speedY;
+    //private int speedY;
     private int panelWidth;
     private int panelHeight;
     private Image sprite;
@@ -30,15 +30,16 @@ public class Duck implements Runnable {
         this.panelWidth = panelWidth;
         this.panelHeight = panelHeight;
         speedX = (int) (Math.random() * 8) - 3;
-        speedY = (int) (Math.random() * 8) - 3;
+        //speedY = (int) (Math.random() * 8) - 3;
 
         if (speedX == 0) {
             speedX = 1;
         }
 
-        if (speedY == 0) {
+        /**if (speedY == 0) {
             speedY = 1;
         }
+         **/
         sprite = new ImageIcon(imagePath).getImage();
     }
 
@@ -68,15 +69,16 @@ public class Duck implements Runnable {
      */
     public void move(int panelWidth, int panelHeight) {
         x += speedX;
-        y += speedY;
+        //y += speedY;
 
         if (x <= 0 || x >= panelWidth ) {
             speedX *= -1;
         }
 
-        if (y <= 0 || y >= panelHeight  ){
+        /**if (y <= 0 || y >= panelHeight  ){
             speedY *= -1;
         }
+         **/
     }
 
     /**
