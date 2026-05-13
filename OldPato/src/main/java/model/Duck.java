@@ -1,4 +1,4 @@
-package model;
+package main.java.model;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,9 +29,12 @@ public class Duck implements Runnable {
         this.y = y;
         this.panelWidth = panelWidth;
         this.panelHeight = panelHeight;
+
+        // Aqui podremos obtener de manera aleatoria la velocidad para despues ser utilizada individualmente en cada pato.
         speedX = (int) (Math.random() * 7) - 3;
         speedY = (int) (Math.random() * 7) - 3;
 
+        // Esto es por si el pato queda en 0 no se sienta interrumpida la animacion y se vea fluido ( mejor dicho que no pare)
         if (speedX == 0) {
             speedX = 1;
         }

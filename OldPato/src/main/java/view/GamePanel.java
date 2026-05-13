@@ -1,6 +1,8 @@
 package main.java.view;
 
-import model.Duck;
+
+
+import main.java.model.Duck;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +26,7 @@ public class GamePanel extends JPanel {
      */
     public GamePanel() {
         fondo = new ImageIcon(BACKGROUND_IMAGE).getImage();
-        ducks = new ArrayList<>();
+         ducks = new ArrayList<>();
 
         ducks.add(new Duck(100, 100, 900, 700, DUCK_LEFT_IMAGE));
         ducks.add(new Duck(300, 200, 900, 700, DUCK_LEFT_IMAGE));
