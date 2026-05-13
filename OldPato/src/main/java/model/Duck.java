@@ -29,8 +29,8 @@ public class Duck implements Runnable {
         this.y = y;
         this.panelWidth = panelWidth;
         this.panelHeight = panelHeight;
-        speedX = (int) (Math.random() * 8) - 3;
-        speedY = (int) (Math.random() * 8) - 3;
+        speedX = (int) (Math.random() * 7) - 3;
+        speedY = (int) (Math.random() * 7) - 3;
 
         if (speedX == 0) {
             speedX = 1;
@@ -70,11 +70,11 @@ public class Duck implements Runnable {
         x += speedX;
         y += speedY;
 
-        if (x <= 0 || x >= panelWidth ) {
+        if (x <= 0 || x >= panelWidth - 80) {
             speedX *= -1;
         }
 
-        if (y <= 0 || y >= panelHeight  ){
+        if (y <= 0 || y >= panelHeight - 80) {
             speedY *= -1;
         }
     }
