@@ -1,7 +1,6 @@
 package main.java.view;
 
-
-
+import main.java.controller.GameController;
 import main.java.model.Duck;
 
 import javax.swing.*;
@@ -20,13 +19,18 @@ public class GamePanel extends JPanel {
 
     private Image fondo;
     private List<Duck> ducks;
+    private GameController controller;
 
     /**
      * Crea el panel, carga las imagenes iniciales e inicia los hilos de los patos.
      */
     public GamePanel() {
         fondo = new ImageIcon(BACKGROUND_IMAGE).getImage();
-         ducks = new ArrayList<>();
+        ducks = new ArrayList<>();
+
+        controller = new GameController();
+        Thread controllerThread = new Thread(controller);
+        controllerThread.start();
 
         ducks.add(new Duck(100, 100, 900, 700, DUCK_LEFT_IMAGE));
         ducks.add(new Duck(300, 200, 900, 700, DUCK_LEFT_IMAGE));
@@ -60,11 +64,17 @@ public class GamePanel extends JPanel {
             graphics.setColor(Color.BLACK);
             graphics.fillRect(0, 0, getWidth(), getHeight());
         }
-        
+
         Color color = new Color(37, 111, 186);
         graphics.setColor(color);
         graphics.setFont(new Font("Arial", Font.BOLD, 24));
         graphics.drawString("Duck Hunt", 100, 50);
+        int minutes = controller.getRemainingSeconds() / 60;
+        int seconds = controller.getRemainingSeconds() % 60;
+
+        String timeText = String.format("%02d:%02d", minutes, seconds);
+
+        graphics.drawString(timeText, 700, 50);
 
         for (Duck duck : ducks) {
             duck.draw(graphics);
