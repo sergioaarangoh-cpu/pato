@@ -14,9 +14,9 @@ import java.util.List;
  */
 public class GamePanel extends JPanel {
     // "/" porque Java lo interpreta bien tanto en Linux como en Windows.
-    private static final String BACKGROUND_IMAGE = "resources/images/background.png";
-    private static final String DUCK_LEFT_IMAGE = "OldPato\\src\\main\\resources\\images\\duckleft.png";
-    private static final String DUCK_RIGHT_IMAGE = "OldPato\\src\\main\\resources\\images\\duckright.png";
+    private static final String BACKGROUND_IMAGE = "src\\main\\resources\\images\\background.png";
+    private static final String DUCK_LEFT_IMAGE = "src\\main\\resources\\images\\duckleft.png";
+    private static final String DUCK_RIGHT_IMAGE = "src\\main\\resources\\images\\duckright.png";
 
     private Image fondo;
     private List<Duck> ducks;
@@ -69,5 +69,13 @@ public class GamePanel extends JPanel {
         for (Duck duck : ducks) {
             duck.draw(graphics);
         }
+    }
+
+    /**
+     * Obtiene la lista de patos en pantalla
+     * @return
+     */
+    public List<Duck> getDucks() {
+        return ducks;
     }
 }

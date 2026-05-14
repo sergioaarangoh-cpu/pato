@@ -57,14 +57,14 @@ public class HUD extends JPanel {
         g.drawString(vidas, vidasX, 30);
 
         // timer arriba a la derecha debajo de las vidas
-        String tiempo = "Time: " + gameState.getRemainingTime() + "s";
+        String tiempo = "Time:" + gameState.getRemainingTime() + " s";
         int tiempoX = getWidth() - g.getFontMetrics().stringWidth(tiempo) - 20;
         g.drawString(tiempo, tiempoX, 60);
 
         // puntuación abajo en el medio
         String score = "Score: " + gameState.getScore();
         int scoreX = (getWidth() - g.getFontMetrics().stringWidth(score)) / 2;
-        g.drawString(score, scoreX, getHeight() - 20);
+        g.drawString(score, scoreX, getHeight() - 50);
     }
 
 }
