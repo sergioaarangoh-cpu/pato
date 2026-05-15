@@ -1,14 +1,14 @@
 package view;
 
-import javax.swing.*;
 import model.GameState;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
  * @author sergioaarangoh-cpu
  * @version 1.0
- *
+ * <p>
  * Clase que permite al jugador ver la información de su partida, como vidas, timer y puntaje
  */
 public class HUD extends JPanel {
@@ -17,6 +17,7 @@ public class HUD extends JPanel {
 
     /**
      * Crea el HUD con el Game state (estado actual del juego)
+     *
      * @param gameState
      */
     public HUD(GameState gameState) {
@@ -26,7 +27,7 @@ public class HUD extends JPanel {
         try {
             arcadeFont = Font.createFont(
                     Font.TRUETYPE_FONT,
-                    new java.io.File("src\\main\\resources\\fonts\\ARCADE_N.TTF")
+                    new java.io.File("OldPato\\src\\main\\resources\\fonts\\ARCADE_N.TTF")
             ).deriveFont(Font.PLAIN, 20f);
         } catch (Exception e) {
             System.out.println("Error cargando fuente: " + e.getMessage());
@@ -37,6 +38,7 @@ public class HUD extends JPanel {
 
     /**
      * Dibuja el HUD encima del juego con graphics
+     *
      * @param g the <code>Graphics</code> object to protect
      */
     @Override
@@ -57,7 +59,7 @@ public class HUD extends JPanel {
         g.drawString(vidas, vidasX, 30);
 
         // timer arriba a la derecha debajo de las vidas
-        String tiempo = "Time:" + gameState.getRemainingTime() + " s";
+        String tiempo = "Time: " + gameState.getRemainingTime() + "s";
         int tiempoX = getWidth() - g.getFontMetrics().stringWidth(tiempo) - 20;
         g.drawString(tiempo, tiempoX, 60);
 

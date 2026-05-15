@@ -1,15 +1,19 @@
 package model;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
  * Representa el pato del juego, incluyendo su posicion, sprite y movimiento.
  */
-public class Duck extends Entity implements Runnable {
+public class Duck implements Runnable {
+    private int x;
+    private int y;
     private int speedX;
     private int speedY;
     private int panelWidth;
     private int panelHeight;
+    private Image sprite;
 
     /**
      * Crea un pato en una posicion inicial y carga su imagen.
@@ -21,7 +25,8 @@ public class Duck extends Entity implements Runnable {
      * @param imagePath ruta de la imagen del pato.
      */
     public Duck(int x, int y, int panelWidth, int panelHeight, String imagePath) {
-        super(x, y, 80, 80, imagePath);
+        this.x = x;
+        this.y = y;
         this.panelWidth = panelWidth;
         this.panelHeight = panelHeight;
 
@@ -40,6 +45,25 @@ public class Duck extends Entity implements Runnable {
         if (speedY == 0) {
             speedY = 1;
         }
+        sprite = new ImageIcon(imagePath).getImage();
+    }
+
+    /**
+     * Obtiene la coordenada horizontal actual del pato.
+     *
+     * @return posicion horizontal.
+     */
+    public int getX() {
+        return x;
+    }
+
+    /**
+     * Obtiene la coordenada vertical actual del pato.
+     *
+     * @return posicion vertical.
+     */
+    public int getY() {
+        return y;
     }
 
     /**
@@ -52,12 +76,12 @@ public class Duck extends Entity implements Runnable {
         x += speedX;
         y += speedY;
 
-        if (x <= 0 || x >= panelWidth - width) {
+        if (x <= 0 || x >= panelWidth - 80) {
             speedX *= -1;
         }
 
 
-        if (y <= 0 || y >= panelHeight - height) {
+        if (y <= 0 || y >= panelHeight - 80) {
             speedY *= -1;
         }
     }
@@ -86,6 +110,17 @@ public class Duck extends Entity implements Runnable {
             } catch (InterruptedException e) {
                 return;
             }
+        }
+    }
+
+    /**
+     * Dibuja el pato en su posicion actual.
+     *
+     * @param graphics contexto grafico donde se dibuja el sprite.
+     */
+    public void draw(Graphics graphics) {
+        if (sprite != null) {
+            graphics.drawImage(sprite, x, y, 80, 80, null);
         }
     }
 }
