@@ -3,6 +3,7 @@ package main.java.view;
 import main.java.view.GamePanel;
 
 import model.GameState;
+import view.HUD;
 
 import javax.swing.*;
 import java.awt.*;

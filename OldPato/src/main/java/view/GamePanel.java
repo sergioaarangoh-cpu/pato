@@ -2,7 +2,7 @@ package main.java.view;
 
 
 
-import main.java.model.Duck;
+import model.Duck;
 
 import javax.swing.*;
 import java.awt.*;
