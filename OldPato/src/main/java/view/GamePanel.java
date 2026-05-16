@@ -2,6 +2,7 @@ package view;
 
 
 import model.Duck;
+import model.Musica;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,9 +17,11 @@ public class GamePanel extends JPanel {
     private static final String BACKGROUND_IMAGE = "OldPato\\src\\main\\resources\\images\\background.png";
     private static final String DUCK_LEFT_IMAGE = "OldPato\\src\\main\\resources\\images\\duckleft.png";
     private static final String DUCK_RIGHT_IMAGE = "OldPato\\src\\main\\resources\\images\\duckright.png";
+    private static final String BACKGROUND_SOUND = "OldPato/src/main/resources/sounds/background.WAV";
 
     private Image fondo;
     private List<Duck> ducks;
+    private Musica musica;
 
     /**
      * Crea el panel, carga las imagenes iniciales e inicia los hilos de los patos.
@@ -27,6 +30,9 @@ public class GamePanel extends JPanel {
         fondo = new ImageIcon(BACKGROUND_IMAGE).getImage();
         ducks = new ArrayList<>();
 
+        musica = new Musica();
+
+        musica.reproducir(BACKGROUND_SOUND);
         ducks.add(new Duck(100, 100, 900, 700, DUCK_LEFT_IMAGE));
         ducks.add(new Duck(300, 200, 900, 700, DUCK_LEFT_IMAGE));
         ducks.add(new Duck(500, 300, 900, 700, DUCK_RIGHT_IMAGE));
@@ -73,3 +79,5 @@ public class GamePanel extends JPanel {
         return new Duck[0];
     }
 }
+
+
