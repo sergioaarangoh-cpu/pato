@@ -60,8 +60,7 @@ public class GamePanel extends JPanel {
             graphics.fillRect(0, 0, getWidth(), getHeight());
         }
 
-        Color color = new Color(37, 111, 186);
-        graphics.setColor(color);
+        graphics.setColor(Color.WHITE);
         graphics.setFont(new Font("Arial", Font.BOLD, 24));
         graphics.drawString("OldPato", 100, 50);
 
