@@ -11,7 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
-    public  MainFrame(){
+    public MainFrame() {
         GameState gameState = new GameState();
         ScreenManager screenManager = new ScreenManager();
 
@@ -54,7 +54,7 @@ public class MainFrame extends JFrame {
 
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         new MainFrame();
 
     }
