@@ -1,11 +1,13 @@
 package view;
 
-
 import model.Duck;
 import model.Musica;
+import model.Scope;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class GamePanel extends JPanel {
     private Image fondo;
     private List<Duck> ducks;
     private Musica musica;
+    private Scope scope;
 
     /**
      * Crea el panel, carga las imagenes iniciales e inicia los hilos de los patos.
@@ -29,6 +32,23 @@ public class GamePanel extends JPanel {
     public GamePanel() {
         fondo = new ImageIcon(BACKGROUND_IMAGE).getImage();
         ducks = new ArrayList<>();
+        scope = new Scope();
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                scope.setX(e.getX() - 40);
+                scope.setY(e.getY() - 40);
+                repaint();
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                scope.setX(e.getX() - 40);
+                scope.setY(e.getY() - 40);
+                repaint();
+            }
+        });
 
         musica = new Musica();
 
@@ -73,10 +93,11 @@ public class GamePanel extends JPanel {
         for (Duck duck : ducks) {
             duck.draw(graphics);
         }
+        scope.draw(graphics);
     }
 
-    public Duck[] getDucks() {
-        return new Duck[0];
+    public List<Duck> getDucks() {
+        return ducks;
     }
 }
 
