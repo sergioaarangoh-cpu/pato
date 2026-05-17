@@ -2,125 +2,143 @@ package model;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 
 /**
- * Representa el pato del juego, incluyendo su posicion, sprite y movimiento.
+ * Represents a duck in the game.
  */
 public class Duck implements Runnable {
+
     private int x;
+
     private int y;
+
     private int speedX;
+
     private int speedY;
+
     private int panelWidth;
+
     private int panelHeight;
+
     private Image sprite;
 
     /**
-     * Crea un pato en una posicion inicial y carga su imagen.
-     *
-     * @param x coordenada horizontal inicial.
-     * @param y coordenada vertical inicial.
-     * @param panelWidth ancho del panel donde se mueve.
-     * @param panelHeight alto del panel donde se mueve.
-     * @param imagePath ruta de la imagen del pato.
+     * Creates a duck.
      */
-    public Duck(int x, int y, int panelWidth, int panelHeight, String imagePath) {
+    public Duck(
+            int x,
+            int y,
+            int panelWidth,
+            int panelHeight,
+            String imagePath
+    ) {
+
         this.x = x;
+
         this.y = y;
+
         this.panelWidth = panelWidth;
+
         this.panelHeight = panelHeight;
 
-        speedX = (int) (Math.random() * 8) - 3;
-        speedY = (int) (Math.random() * 8) - 3;
+        speedX = 4;
 
-        // Aqui podremos obtener de manera aleatoria la velocidad para despues ser utilizada individualmente en cada pato.
-        speedX = (int) (Math.random() * 7) - 3;
-        speedY = (int) (Math.random() * 7) - 3;
+        speedY = 2;
 
-        // Esto es por si el pato queda en 0 no se sienta interrumpida la animacion y se vea fluido ( mejor dicho que no pare)
-        if (speedX == 0) {
-            speedX = 1;
+        loadSprite(imagePath);
+    }
+
+    /**
+     * Loads duck sprite.
+     */
+    private void loadSprite(String imagePath) {
+
+        URL url = getClass().getResource(imagePath);
+
+        if (url == null) {
+
+            System.out.println(
+                    "No se encontro la imagen: " + imagePath
+            );
+
+            return;
         }
 
-        if (speedY == 0) {
-            speedY = 1;
-        }
-        sprite = new ImageIcon(imagePath).getImage();
+        sprite = new ImageIcon(url).getImage();
     }
 
-    /**
-     * Obtiene la coordenada horizontal actual del pato.
-     *
-     * @return posicion horizontal.
-     */
-    public int getX() {
-        return x;
-    }
-
-    /**
-     * Obtiene la coordenada vertical actual del pato.
-     *
-     * @return posicion vertical.
-     */
-    public int getY() {
-        return y;
-    }
-
-    /**
-     * Mueve el pato de forma fluida dentro de los limites del panel.
-     *
-     * @param panelWidth ancho actual del panel.
-     * @param panelHeight alto actual del panel.
-     */
-    public void move(int panelWidth, int panelHeight) {
-        x += speedX;
-        y += speedY;
-
-        if (x <= 0 || x >= panelWidth - 80) {
-            speedX *= -1;
-        }
-
-
-        if (y <= 0 || y >= panelHeight - 80) {
-            speedY *= -1;
-        }
-    }
-
-    /**
-     * Actualiza los limites donde el pato puede moverse.
-     *
-     * @param panelWidth ancho actual del panel.
-     * @param panelHeight alto actual del panel.
-     */
-    public void setPanelSize(int panelWidth, int panelHeight) {
-        this.panelWidth = panelWidth;
-        this.panelHeight = panelHeight;
-    }
-
-    /**
-     * Ejecuta el movimiento aleatorio del pato en un hilo.
-     */
     @Override
     public void run() {
+
         while (true) {
-            move(panelWidth, panelHeight);
+
+            move();
 
             try {
-                Thread.sleep(1000 / 60);
+
+                Thread.sleep(16);
+
             } catch (InterruptedException e) {
-                return;
+
+                Thread.currentThread().interrupt();
             }
         }
     }
 
     /**
-     * Dibuja el pato en su posicion actual.
-     *
-     * @param graphics contexto grafico donde se dibuja el sprite.
+     * Handles duck movement.
+     */
+    private void move() {
+
+        x += speedX;
+
+        y += speedY;
+
+        if (x <= 0 || x >= panelWidth - 120) {
+
+            speedX *= -1;
+        }
+
+        if (y <= 0 || y >= panelHeight - 120) {
+
+            speedY *= -1;
+        }
+    }
+
+    /**
+     * Draws the duck.
      */
     public void draw(Graphics graphics) {
+
         if (sprite != null) {
-            graphics.drawImage(sprite, x, y, 80, 80, null);
+
+            graphics.drawImage(
+                    sprite,
+                    x,
+                    y,
+                    120,
+                    120,
+                    null
+            );
         }
+    }
+
+    public void setPanelSize(
+            int panelWidth,
+            int panelHeight
+    ) {
+
+        this.panelWidth = panelWidth;
+
+        this.panelHeight = panelHeight;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getX() {
+        return x;
     }
 }

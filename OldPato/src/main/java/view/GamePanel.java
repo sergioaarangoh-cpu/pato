@@ -16,10 +16,17 @@ import java.util.List;
  */
 public class GamePanel extends JPanel {
     // "/" porque Java lo interpreta bien tanto en Linux como en Windows.
-    private static final String BACKGROUND_IMAGE = "OldPato\\src\\main\\resources\\images\\background.png";
-    private static final String DUCK_LEFT_IMAGE = "OldPato\\src\\main\\resources\\images\\duckleft.png";
-    private static final String DUCK_RIGHT_IMAGE = "OldPato\\src\\main\\resources\\images\\duckright.png";
-    private static final String BACKGROUND_SOUND = "OldPato/src/main/resources/sounds/background.WAV";
+    private static final String BACKGROUND_IMAGE =
+            "/images/background.png";
+
+    private static final String DUCK_LEFT_IMAGE =
+            "/images/duckleft.png";
+
+    private static final String DUCK_RIGHT_IMAGE =
+            "/images/duckright.png";
+
+    private static final String BACKGROUND_SOUND =
+            "/sounds/background.wav";
 
     private Image fondo;
     private List<Duck> ducks;
@@ -30,7 +37,7 @@ public class GamePanel extends JPanel {
      * Crea el panel, carga las imagenes iniciales e inicia los hilos de los patos.
      */
     public GamePanel() {
-        fondo = new ImageIcon(BACKGROUND_IMAGE).getImage();
+        fondo = new ImageIcon(getClass().getResource(BACKGROUND_IMAGE)).getImage();
         ducks = new ArrayList<>();
         scope = new Scope();
 
@@ -52,7 +59,7 @@ public class GamePanel extends JPanel {
 
         musica = new Musica();
 
-        musica.reproducir(BACKGROUND_SOUND);
+        musica.play(BACKGROUND_SOUND);
         ducks.add(new Duck(100, 100, 900, 700, DUCK_LEFT_IMAGE));
         ducks.add(new Duck(300, 200, 900, 700, DUCK_LEFT_IMAGE));
         ducks.add(new Duck(500, 300, 900, 700, DUCK_RIGHT_IMAGE));
