@@ -28,15 +28,31 @@ public class GamePanel extends JPanel {
     private static final String BACKGROUND_SOUND =
             "/sounds/background.wav";
 
+    private static final String DUCKENCIA_LEFT_IMAGE =
+            "/images/duckencialeft.png";
+
+    private static final String DUCKENCIA_RIGHT_IMAGE =
+            "/images/duckenciaright.png";
+
     private Image fondo;
     private List<Duck> ducks;
     private Musica musica;
     private Scope scope;
+    private Font arcadeFont;
 
     /**
      * Crea el panel, carga las imagenes iniciales e inicia los hilos de los patos.
      */
     public GamePanel() {
+        try {
+            arcadeFont = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    new java.io.File("pato\\OldPato\\src\\main\\resources\\fonts\\ARCADE_N.TTF")
+            ).deriveFont(Font.PLAIN, 20f);
+        } catch (Exception e) {
+            System.out.println("Error cargando fuente: " + e.getMessage());
+            arcadeFont = new Font("Arial", Font.BOLD, 20); // fuente de respaldo
+        }
         fondo = new ImageIcon(getClass().getResource(BACKGROUND_IMAGE)).getImage();
         ducks = new ArrayList<>();
         scope = new Scope();
@@ -61,9 +77,10 @@ public class GamePanel extends JPanel {
 
         musica.play(BACKGROUND_SOUND);
         ducks.add(new Duck(100, 100, 900, 700, DUCK_LEFT_IMAGE));
-        ducks.add(new Duck(300, 200, 900, 700, DUCK_LEFT_IMAGE));
-        ducks.add(new Duck(500, 300, 900, 700, DUCK_RIGHT_IMAGE));
-
+        ducks.add(new Duck(100, 550, 900, 700, DUCK_LEFT_IMAGE));
+        ducks.add(new Duck(750, 100, 900, 700, DUCK_RIGHT_IMAGE));
+        ducks.add(new Duck(750, 550, 900, 700, DUCKENCIA_RIGHT_IMAGE));
+        ducks.add(new Duck(450, 350, 900, 700, DUCKENCIA_LEFT_IMAGE));
         for (Duck duck : ducks) {
             Thread hiloDuck = new Thread(duck);
             hiloDuck.start();
@@ -94,8 +111,8 @@ public class GamePanel extends JPanel {
         }
 
         graphics.setColor(Color.WHITE);
-        graphics.setFont(new Font("Arial", Font.BOLD, 24));
-        graphics.drawString("OldPato", 100, 50);
+        graphics.setFont(arcadeFont);
+        graphics.drawString("OldPato", 20, 40);
 
         for (Duck duck : ducks) {
             duck.draw(graphics);

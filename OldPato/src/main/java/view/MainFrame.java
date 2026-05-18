@@ -16,7 +16,8 @@ import java.awt.*;
  * bienvenida y, despues de la interaccion del usuario, construye el panel de
  * juego con su HUD y sus manejadores de entrada.
  */
-public class MainFrame extends JFrame {
+public class
+MainFrame extends JFrame {
 
     private static final int WINDOW_WIDTH = 900;
     private static final int WINDOW_HEIGHT = 700;
