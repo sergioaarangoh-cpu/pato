@@ -1,7 +1,7 @@
 package model;
 
 public class Scope extends Entity {
-    private static final String SCOPE_IMAGE = "pato\\OldPato\\src\\main\\resources\\images\\scope.png";
+    private static final String SCOPE_IMAGE = "OldPato\\src\\main\\resources\\images\\scope.png";
     private static final int SCOPE_SIZE = 50;
 
     public Scope() {
