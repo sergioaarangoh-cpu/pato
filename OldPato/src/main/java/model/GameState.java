@@ -28,6 +28,15 @@ public class GameState {
     }
 
     /**
+     * Reinicia el estado del juego a los valores iniciales.
+     */
+    public void reset() {
+        lives = INITIAL_LIVES;
+        score = 0;
+        remainingTime = INITIAL_TIMER_SECONDS;
+        gameOver = false;
+    }
+    /**
      * Verifica si el juego ha terminado
      * @return true si el jugador perdió
      */

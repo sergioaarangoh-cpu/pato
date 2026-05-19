@@ -6,11 +6,11 @@ import java.io.File;
 public class SoundTest {
     public static void main(String[] args) throws Exception {
         AudioInputStream audio = AudioSystem.getAudioInputStream(
-                new File("src/main/main.java.resources/sounds/powerup.wav")
+                new File("pato/OldPato/src/main/resources/sounds/welcomeMusic.wav")
         );
 
         AudioInputStream audio2 = AudioSystem.getAudioInputStream(
-                new File("src/main/main.java.resources/sounds/youlost.wav")
+                new File("pato/OldPato/src/main/resources/sounds/welcomeMusic.wav")
         );
 
         Clip clip = AudioSystem.getClip();

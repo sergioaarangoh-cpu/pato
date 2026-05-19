@@ -67,6 +67,12 @@ public class WelcomePanel extends JPanel {
     }
 
     /**
+     * Resetea el panel para permitir iniciar el juego de nuevo.
+     */
+    public void reset() {
+        started = false;
+    }
+    /**
      * Carga la imagen de bienvenida desde archivo local o desde el classpath.
      *
      * @return imagen de bienvenida, o {@code null} si no se pudo encontrar

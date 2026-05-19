@@ -4,30 +4,45 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * Maneja los eventos del mouse para el disparinho y movimiento de mira
+ * Maneja los eventos del mouse para el disparo y movimiento de mira.
  */
 public class MouseHandler extends MouseAdapter {
 
-    // booleana que indica si el jugador está disparinhando
+    // booleana que indica si el jugador está disparando
     private boolean shooting = false;
 
     // posicion del mouse en x y y
     private int mouseX = 0;
     private int mouseY = 0;
 
+    // acción que se ejecuta inmediatamente cuando el jugador hace clic
+    private Runnable onShoot;
+
     /**
-     * Se ejecuta cuando el jugador clickea
-     * @param e the event to be processed
+     * Registra la acción que se ejecuta al disparar.
+     * @param onShoot acción a ejecutar al hacer clic
+     */
+    public void setOnShoot(Runnable onShoot) {
+        this.onShoot = onShoot;
+    }
+
+    /**
+     * Se ejecuta cuando el jugador clickea.
+     * @param e evento del mouse
      */
     @Override
     public void mousePressed(MouseEvent e) {
         super.mousePressed(e);
         shooting = true;
+        // notifica inmediatamente en lugar de esperar al timer
+        if (onShoot != null) {
+            onShoot.run();
+        }
     }
 
     /**
-     * Cuando el jugador suelta el clic
-     * @param e the event to be processed
+     * Cuando el jugador suelta el clic.
+     * @param e evento del mouse
      */
     @Override
     public void mouseReleased(MouseEvent e) {
@@ -36,8 +51,8 @@ public class MouseHandler extends MouseAdapter {
     }
 
     /**
-     * Mouse movido sin clic
-     * @param e the event to be processed
+     * Mouse movido sin clic.
+     * @param e evento del mouse
      */
     @Override
     public void mouseMoved(MouseEvent e) {
@@ -47,8 +62,8 @@ public class MouseHandler extends MouseAdapter {
     }
 
     /**
-     * Mouse movido arrastrado con clic
-     * @param e the event to be processed
+     * Mouse movido arrastrado con clic.
+     * @param e evento del mouse
      */
     @Override
     public void mouseDragged(MouseEvent e) {
@@ -57,15 +72,7 @@ public class MouseHandler extends MouseAdapter {
         mouseY = e.getY();
     }
 
-    public boolean isShooting() {
-        return shooting;
-    }
-
-    public int getMouseX() {
-        return mouseX;
-    }
-
-    public int getMouseY() {
-        return mouseY;
-    }
+    public boolean isShooting() { return shooting; }
+    public int getMouseX() { return mouseX; }
+    public int getMouseY() { return mouseY; }
 }

@@ -5,6 +5,7 @@ import controller.InputHandler;
 import controller.MouseHandler;
 import controller.ScreenManager;
 import model.GameState;
+import util.SoundManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,27 +17,37 @@ import java.awt.*;
  * bienvenida y, despues de la interaccion del usuario, construye el panel de
  * juego con su HUD y sus manejadores de entrada.
  */
-public class
-MainFrame extends JFrame {
+public class MainFrame extends JFrame {
 
     private static final int WINDOW_WIDTH = 900;
     private static final int WINDOW_HEIGHT = 700;
     private static final String WELCOME_SCREEN = "welcome";
     private static final String GAME_SCREEN = "game";
+    private static final String GAME_OVER_SCREEN = "gameover";
+    private static final String WELCOME_MUSIC = "OldPato\\src\\main\\resources\\sounds\\welcomeMusic.wav";
+    private static final String START_SOUND = "OldPato\\src\\main\\resources\\sounds\\startsound.wav";
+    private static final String LOST_SOUND = "OldPato\\src\\main\\resources\\sounds\\youlost.wav";
 
+    private final SoundManager soundManager;
     private final CardLayout cardLayout;
     private final JPanel screens;
     private boolean gameStarted;
+    private GameController gameController;
+    private WelcomePanel welcomePanel;
 
     /**
      * Crea la ventana principal y registra la pantalla de bienvenida como
      * primera vista visible.
      */
     public MainFrame() {
+        soundManager = new SoundManager();
         cardLayout = new CardLayout();
         screens = new JPanel(cardLayout);
         screens.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
-        screens.add(new WelcomePanel(this::showGamePanel), WELCOME_SCREEN);
+
+        welcomePanel = new WelcomePanel(this::showGamePanel);
+        screens.add(welcomePanel, WELCOME_SCREEN);
+        screens.add(new GameOverPanel(this::showWelcomePanel), GAME_OVER_SCREEN);
 
         add(screens);
 
@@ -46,6 +57,23 @@ MainFrame extends JFrame {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+
+        // suena al abrir el programa y cuando termina arranca la música del menú
+        soundManager.playSound(START_SOUND, () -> soundManager.playMusic(WELCOME_MUSIC));
+    }
+
+    /**
+     * Muestra el panel de bienvenida y reproduce su música.
+     */
+    private void showWelcomePanel() {
+        if (gameController != null) {
+            gameController.reset();
+        }
+        gameStarted = false;
+        welcomePanel.reset();
+        soundManager.playMusic(WELCOME_MUSIC);
+        cardLayout.show(screens, WELCOME_SCREEN);
+        SwingUtilities.invokeLater(welcomePanel::requestFocusInWindow);
     }
 
     /**
@@ -56,6 +84,7 @@ MainFrame extends JFrame {
      */
     private void showGamePanel() {
         if (gameStarted) {
+            cardLayout.show(screens, GAME_SCREEN);
             return;
         }
         gameStarted = true;
@@ -66,7 +95,7 @@ MainFrame extends JFrame {
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
 
-        GamePanel gamePanel = new GamePanel();
+        GamePanel gamePanel = new GamePanel(soundManager);
         gamePanel.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         MouseHandler mouseHandler = new MouseHandler();
@@ -80,8 +109,22 @@ MainFrame extends JFrame {
         gamePanel.addKeyListener(inputHandler);
         gamePanel.setFocusable(true);
 
-        GameController gameController = new GameController(gameState, gamePanel,
-                hud, mouseHandler, inputHandler, screenManager);
+        gameController = new GameController(
+                gameState, gamePanel, hud, mouseHandler, inputHandler, screenManager, soundManager
+        );
+
+        // conecta el clic directamente con checkShot
+        mouseHandler.setOnShoot(gameController::checkShot);
+
+        // cuando el juego termina muestra el panel de game over
+        screenManager.setOnGameOver(() -> {
+            soundManager.stopMusic();
+            soundManager.playSound(LOST_SOUND);
+            cardLayout.show(screens, GAME_OVER_SCREEN);
+            SwingUtilities.invokeLater(() ->
+                    screens.getComponent(screens.getComponentCount() - 1).requestFocusInWindow()
+            );
+        });
 
         layeredPane.add(gamePanel, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(hud, JLayeredPane.PALETTE_LAYER);

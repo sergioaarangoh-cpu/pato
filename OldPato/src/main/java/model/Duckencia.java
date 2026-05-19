@@ -1,16 +1,16 @@
 package model;
 
 /**
- * Representa un pato malvado en el juego.
- * Si el jugador le dispara, gana 20 segundos extra.
+ * pato bueno en el juego.
+ * Si el jugador le dispara, pierde una vida.
  *
  * @author sergioaarangoh-cpu
  * @version 1.0
  */
-public class EvilDuck extends Duck {
+public class Duckencia extends Duck {
 
     /**
-     * Crea un EvilDuck en una posición inicial.
+     * Crea un Duckencia en una posición inicial.
      *
      * @param x           coordenada horizontal inicial
      * @param y           coordenada vertical inicial
@@ -19,7 +19,7 @@ public class EvilDuck extends Duck {
      * @param leftImage   ruta del sprite mirando a la izquierda
      * @param rightImage  ruta del sprite mirando a la derecha
      */
-    public EvilDuck(int x, int y, int panelWidth, int panelHeight, String leftImage, String rightImage) {
+    public Duckencia(int x, int y, int panelWidth, int panelHeight, String leftImage, String rightImage) {
         super(x, y, panelWidth, panelHeight, leftImage, rightImage);
     }
 }

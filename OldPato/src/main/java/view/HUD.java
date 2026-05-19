@@ -27,7 +27,7 @@ public class HUD extends JPanel {
         try {
             arcadeFont = Font.createFont(
                     Font.TRUETYPE_FONT,
-                    new java.io.File("pato\\OldPato\\src\\main\\resources\\fonts\\ARCADE_N.TTF")
+                    new java.io.File("OldPato\\src\\main\\resources\\fonts\\ARCADE_N.TTF")
             ).deriveFont(Font.PLAIN, 20f);
         } catch (Exception e) {
             System.out.println("Error cargando fuente: " + e.getMessage());

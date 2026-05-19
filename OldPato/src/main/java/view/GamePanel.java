@@ -1,8 +1,10 @@
 package view;
 
 import model.Duck;
-import model.Musica;
+import model.Duckencia;
+import model.EvilDuck;
 import model.Scope;
+import util.SoundManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,44 +17,40 @@ import java.util.List;
  * Panel principal del juego encargado de dibujar el fondo, el titulo y el pato.
  */
 public class GamePanel extends JPanel {
-    // "/" porque Java lo interpreta bien tanto en Linux como en Windows.
-    private static final String BACKGROUND_IMAGE =
-            "/images/background.png";
 
-    private static final String DUCK_LEFT_IMAGE =
-            "/images/duckleft.png";
-
-    private static final String DUCK_RIGHT_IMAGE =
-            "/images/duckright.png";
-
-    private static final String BACKGROUND_SOUND =
-            "/sounds/background.wav";
-
-    private static final String DUCKENCIA_LEFT_IMAGE =
-            "/images/duckencialeft.png";
-
-    private static final String DUCKENCIA_RIGHT_IMAGE =
-            "/images/duckenciaright.png";
+    private static final String BACKGROUND_IMAGE = "/images/background.png";
+    private static final String DUCK_LEFT_IMAGE = "/images/duckleft.png";
+    private static final String DUCK_RIGHT_IMAGE = "/images/duckright.png";
+    private static final String DUCKENCIA_LEFT_IMAGE = "/images/duckencialeft.png";
+    private static final String DUCKENCIA_RIGHT_IMAGE = "/images/duckenciaright.png";
+    private static final String BACKGROUND_SOUND = "OldPato\\src\\main\\resources\\sounds\\background.wav";
+    private static final String EVIL_DUCK_LEFT_IMAGE = "/images/evilduckleft.png";
+    private static final String EVIL_DUCK_RIGHT_IMAGE = "/images/evilduckright.png";
 
     private Image fondo;
     private List<Duck> ducks;
-    private Musica musica;
+    private SoundManager soundManager;
     private Scope scope;
     private Font arcadeFont;
 
     /**
      * Crea el panel, carga las imagenes iniciales e inicia los hilos de los patos.
+     *
+     * @param soundManager manejador de audio compartido
      */
-    public GamePanel() {
+    public GamePanel(SoundManager soundManager) {
+        this.soundManager = soundManager;
+
         try {
             arcadeFont = Font.createFont(
                     Font.TRUETYPE_FONT,
-                    new java.io.File("pato\\OldPato\\src\\main\\resources\\fonts\\ARCADE_N.TTF")
+                    new java.io.File("OldPato\\src\\main\\resources\\fonts\\ARCADE_N.TTF")
             ).deriveFont(Font.PLAIN, 20f);
         } catch (Exception e) {
             System.out.println("Error cargando fuente: " + e.getMessage());
-            arcadeFont = new Font("Arial", Font.BOLD, 20); // fuente de respaldo
+            arcadeFont = new Font("Arial", Font.BOLD, 20);
         }
+
         fondo = new ImageIcon(getClass().getResource(BACKGROUND_IMAGE)).getImage();
         ducks = new ArrayList<>();
         scope = new Scope();
@@ -73,14 +71,16 @@ public class GamePanel extends JPanel {
             }
         });
 
-        musica = new Musica();
+        // inicia la música de fondo
+        soundManager.playMusic(BACKGROUND_SOUND);
 
-        musica.play(BACKGROUND_SOUND);
-        ducks.add(new Duck(100, 100, 900, 700, DUCK_LEFT_IMAGE));
-        ducks.add(new Duck(100, 550, 900, 700, DUCK_LEFT_IMAGE));
-        ducks.add(new Duck(750, 100, 900, 700, DUCK_RIGHT_IMAGE));
-        ducks.add(new Duck(750, 550, 900, 700, DUCKENCIA_RIGHT_IMAGE));
-        ducks.add(new Duck(450, 350, 900, 700, DUCKENCIA_LEFT_IMAGE));
+        ducks.add(new Duck(100, 100, 900, 700, DUCK_LEFT_IMAGE, DUCK_RIGHT_IMAGE));
+        ducks.add(new Duck(300, 200, 900, 700, DUCK_LEFT_IMAGE, DUCK_RIGHT_IMAGE));
+        ducks.add(new Duck(500, 300, 900, 700, DUCK_LEFT_IMAGE, DUCK_RIGHT_IMAGE));
+        ducks.add(new Duckencia(450, 350, 900, 700, DUCKENCIA_LEFT_IMAGE, DUCKENCIA_RIGHT_IMAGE));
+        ducks.add(new Duckencia(700, 400, 900, 700, DUCKENCIA_LEFT_IMAGE, DUCKENCIA_RIGHT_IMAGE));
+        ducks.add(new EvilDuck(200, 200, 900, 700, EVIL_DUCK_LEFT_IMAGE, EVIL_DUCK_RIGHT_IMAGE));
+
         for (Duck duck : ducks) {
             Thread hiloDuck = new Thread(duck);
             hiloDuck.start();
@@ -120,9 +120,11 @@ public class GamePanel extends JPanel {
         scope.draw(graphics);
     }
 
+    /**
+     * Obtiene la lista de patos en pantalla.
+     * @return lista de patos
+     */
     public List<Duck> getDucks() {
         return ducks;
     }
 }
-
-
