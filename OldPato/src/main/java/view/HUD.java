@@ -53,6 +53,11 @@ public class HUD extends JPanel {
         //.stringWidth(score) devuelve el ancho en píxeles que ocuparía el texto
         //(getWidth() - anchoTexto) / 2 → centra el texto restando su ancho al ancho total del panel y dividiendo entre 2
 
+        String playerName = gameState.getPlayerName();
+        if (!playerName.isEmpty()) {
+            g.drawString("Player: " + playerName, 20, 55);
+        }
+
         // vidas arriba a la derecha
         String vidas = "Lives: " + gameState.getLives();
         int vidasX = getWidth() - g.getFontMetrics().stringWidth(vidas) - 20;

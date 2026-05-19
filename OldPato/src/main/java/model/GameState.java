@@ -16,6 +16,7 @@ public class GameState {
     private int score;
     private int remainingTime;
     private boolean gameOver;
+    private String playerName;
 
     /**
      * Constructor que inicializa el gamestate con los valores por defecto de cada variable
@@ -25,6 +26,7 @@ public class GameState {
         score = 0;
         remainingTime = INITIAL_TIMER_SECONDS;
         gameOver = false;
+        playerName = "";
     }
 
     /**
@@ -35,6 +37,7 @@ public class GameState {
         score = 0;
         remainingTime = INITIAL_TIMER_SECONDS;
         gameOver = false;
+        playerName = "";
     }
     /**
      * Verifica si el juego ha terminado
@@ -50,6 +53,25 @@ public class GameState {
      */
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
+    }
+
+
+    /**
+     * Obtiene el nombre del jugador de la partida actual.
+     *
+     * @return nombre del jugador, o una cadena vacia si no se ha definido
+     */
+    public String getPlayerName() {
+        return playerName == null ? "" : playerName;
+    }
+
+    /**
+     * Define el nombre del jugador de la partida actual.
+     *
+     * @param playerName nombre ingresado por el usuario
+     */
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName == null ? "" : playerName.trim();
     }
 
     public int getRemainingTime() {

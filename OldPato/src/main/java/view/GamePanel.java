@@ -112,7 +112,7 @@ public class GamePanel extends JPanel {
 
         graphics.setColor(Color.WHITE);
         graphics.setFont(arcadeFont);
-        graphics.drawString("OldPato", 20, 40);
+        graphics.drawString("OldPato", 10, 20);
 
         for (Duck duck : ducks) {
             duck.draw(graphics);
@@ -122,6 +122,7 @@ public class GamePanel extends JPanel {
 
     /**
      * Obtiene la lista de patos en pantalla.
+     *
      * @return lista de patos
      */
     public List<Duck> getDucks() {

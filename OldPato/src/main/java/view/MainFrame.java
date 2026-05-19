@@ -27,7 +27,7 @@ public class MainFrame extends JFrame {
     private static final String WELCOME_MUSIC = "OldPato\\src\\main\\resources\\sounds\\welcomeMusic.wav";
     private static final String START_SOUND = "OldPato\\src\\main\\resources\\sounds\\startsound.wav";
     private static final String LOST_SOUND = "OldPato\\src\\main\\resources\\sounds\\youlost.wav";
-
+    
     private final SoundManager soundManager;
     private final CardLayout cardLayout;
     private final JPanel screens;
@@ -60,6 +60,7 @@ public class MainFrame extends JFrame {
 
         // suena al abrir el programa y cuando termina arranca la música del menú
         soundManager.playSound(START_SOUND, () -> soundManager.playMusic(WELCOME_MUSIC));
+        SwingUtilities.invokeLater(welcomePanel::requestNameFocus);
     }
 
     /**
@@ -73,7 +74,7 @@ public class MainFrame extends JFrame {
         welcomePanel.reset();
         soundManager.playMusic(WELCOME_MUSIC);
         cardLayout.show(screens, WELCOME_SCREEN);
-        SwingUtilities.invokeLater(welcomePanel::requestFocusInWindow);
+        SwingUtilities.invokeLater(welcomePanel::requestNameFocus);
     }
 
     /**
@@ -81,8 +82,10 @@ public class MainFrame extends JFrame {
      * <p>
      * Este metodo solo se ejecuta una vez para evitar crear multiples
      * instancias de {@link GamePanel}, {@link HUD} o temporizadores de juego.
+     *
+     * @param playerName nombre ingresado por el jugador en la bienvenida
      */
-    private void showGamePanel() {
+    private void showGamePanel(String playerName) {
         if (gameStarted) {
             cardLayout.show(screens, GAME_SCREEN);
             return;
@@ -90,6 +93,7 @@ public class MainFrame extends JFrame {
         gameStarted = true;
 
         GameState gameState = new GameState();
+        gameState.setPlayerName(playerName);
         ScreenManager screenManager = new ScreenManager();
 
         JLayeredPane layeredPane = new JLayeredPane();
