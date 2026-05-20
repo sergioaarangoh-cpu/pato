@@ -27,7 +27,7 @@ public class MainFrame extends JFrame {
     private static final String WELCOME_MUSIC = "OldPato\\src\\main\\resources\\sounds\\welcomeMusic.wav";
     private static final String START_SOUND = "OldPato\\src\\main\\resources\\sounds\\startsound.wav";
     private static final String LOST_SOUND = "OldPato\\src\\main\\resources\\sounds\\youlost.wav";
-    
+
     private final SoundManager soundManager;
     private final CardLayout cardLayout;
     private final JPanel screens;
@@ -79,9 +79,7 @@ public class MainFrame extends JFrame {
 
     /**
      * Construye y muestra el panel de juego despues de la bienvenida.
-     * <p>
      * Este metodo solo se ejecuta una vez para evitar crear multiples
-     * instancias de {@link GamePanel}, {@link HUD} o temporizadores de juego.
      *
      * @param playerName nombre ingresado por el jugador en la bienvenida
      */

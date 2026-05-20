@@ -28,9 +28,11 @@ public class GameController {
     private HUD hud;
     private InputHandler inputHandler;
     private MouseHandler mouseHandler;
+    private GamepadHandler gamepadHandler;
     private ScreenManager screenManager;
     private SoundManager soundManager;
     private Timer countdownTimer;
+    private Timer inputTimer;
 
     /**
      * Crea el controller con todo lo necesario.
@@ -50,12 +52,13 @@ public class GameController {
         this.gamePanel = gamePanel;
         this.hud = hud;
         this.mouseHandler = mouseHandler;
+        this.gamepadHandler = new GamepadHandler();
         this.inputHandler = inputHandler;
         this.screenManager = screenManager;
         this.soundManager = soundManager;
 
         // timer que se dispara cada frame para revisar si el jugador presionó algo
-        Timer inputTimer = new Timer(1000 / 60, e -> handleInput());
+        inputTimer = new Timer(1000 / 60, e -> handleInput());
         inputTimer.start();
 
         // reduce el tiempo en 1 cada segundo
@@ -75,6 +78,8 @@ public class GameController {
      * Maneja el input del teclado según la pantalla actual.
      */
     private void handleInput() {
+        handleGamepadInput();
+
         if (inputHandler.isEnterPressed()) {
             switch (screenManager.getCurrentScreen()) {
                 case INSTRUCTIONS:
@@ -94,10 +99,27 @@ public class GameController {
     }
 
     /**
+     * Actualiza el mando y aplica sus acciones sobre el juego.
+     */
+    private void handleGamepadInput() {
+        if (!screenManager.isPlaying() || !gamepadHandler.isAvailable()) {
+            return;
+        }
+
+        gamepadHandler.update(gamePanel.getWidth(), gamePanel.getHeight());
+        gamePanel.setAimPosition(gamepadHandler.getAimX(), gamepadHandler.getAimY());
+
+        if (gamepadHandler.wasShootPressed()) {
+            checkShotAt(gamepadHandler.getAimX(), gamepadHandler.getAimY());
+        }
+    }
+
+    /**
      * Empieza el juego e inicia la cuenta regresiva.
      */
     public void startGame() {
         screenManager.goToPlaying();
+        gamepadHandler.centerAim(gamePanel.getWidth(), gamePanel.getHeight());
         countdownTimer.start();
     }
 
@@ -105,7 +127,9 @@ public class GameController {
      * Reinicia el juego a su estado inicial.
      */
     public void reset() {
+        inputTimer.stop();
         countdownTimer.stop();
+        gamepadHandler.dispose();
         gameState.reset();
         screenManager.goToMenu();
     }
@@ -117,11 +141,18 @@ public class GameController {
         if (!screenManager.isPlaying()) return;
         if (!mouseHandler.isShooting()) return;
 
+        checkShotAt(mouseHandler.getMouseX(), mouseHandler.getMouseY());
+    }
+
+    /**
+     * Verifica si un disparo realizado en las coordenadas indicadas golpea algun pato.
+     *
+     * @param mx coordenada horizontal del disparo
+     * @param my coordenada vertical del disparo
+     */
+    private void checkShotAt(int mx, int my) {
         // sonido de disparo
         soundManager.playSound(GUNSHOT_SOUND);
-
-        int mx = mouseHandler.getMouseX();
-        int my = mouseHandler.getMouseY();
 
         for (Duck duck : gamePanel.getDucks()) {
             if (mx >= duck.getX() && mx <= duck.getX() + 120 &&

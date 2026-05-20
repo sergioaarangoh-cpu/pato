@@ -28,10 +28,12 @@ El jugador controla una mira en la pantalla y debe disparar a los patos que vuel
 |---|---|
 | Mover la mira | Mouse |
 | Disparar | Clic izquierdo |
+| Mover la mira con mando | Stick izquierdo |
+| Disparar con mando | Botón A o gatillo derecho |
 | Iniciar juego | Enter o clic |
 | Volver al menú | Escape |
 
-> 🎮 Soporte para mando pendiente de implementar.
+> 🎮 El soporte para mando usa JInput. En IntelliJ, importa el `pom.xml` del proyecto para descargar `jinput` y `windows-plugin`.
 
 ## Tecnologías
 - Java (OpenJDK 26)

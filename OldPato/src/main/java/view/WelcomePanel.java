@@ -18,8 +18,10 @@ import java.util.function.Consumer;
 public class WelcomePanel extends JPanel {
 
     private static final String WELCOME_IMAGE = "OldPato/src/main/resources/images/welcomeScreen.png";
+    private static final String POPUP_IMAGE = "OldPato/src/main/resources/images/background.png";
 
     private final Image welcomeImage;
+    private final Image popupImage;
     private final Consumer<String> onStart;
     private final JTextField nameField;
     private final JLabel errorLabel;
@@ -33,6 +35,7 @@ public class WelcomePanel extends JPanel {
     public WelcomePanel(Consumer<String> onStart) {
         this.onStart = onStart;
         this.welcomeImage = loadWelcomeImage();
+        this.popupImage = loadImage(POPUP_IMAGE, "/images/background.png");
         this.nameField = new JTextField(18);
         this.errorLabel = new JLabel(" ");
         setFocusable(true);
@@ -50,16 +53,35 @@ public class WelcomePanel extends JPanel {
         formPanel.setBackground(new Color(0, 0, 0, 170));
         formPanel.setBorder(BorderFactory.createEmptyBorder(18, 22, 18, 22));
 
+        Font arcadeFont;
+        try {
+            arcadeFont = Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    new java.io.File("OldPato\\src\\main\\resources\\fonts\\ARCADE_N.TTF")
+            ).deriveFont(Font.PLAIN, 10f);
+        } catch (Exception e) {
+            System.out.println("Error cargando fuente: " + e.getMessage());
+            arcadeFont = new Font("Arial", Font.BOLD, 10); // fuente de respaldo
+        }
         JLabel nameLabel = new JLabel("Nombre del jugador");
         nameLabel.setForeground(Color.WHITE);
         nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
-        nameField.setFont(new Font("Arial", Font.PLAIN, 18));
+        nameField.setFont(arcadeFont);
         nameField.setHorizontalAlignment(JTextField.CENTER);
 
         JButton startButton = new JButton("Iniciar");
-        startButton.setFont(new Font("Arial", Font.BOLD, 16));
+        startButton.setFont(arcadeFont);
         startButton.addActionListener(e -> startGame());
+
+        JButton imageButton = new JButton("Ver Instrucciones");
+        imageButton.setFont(arcadeFont);
+        imageButton.addActionListener(e -> showImagePopup());
+
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 8, 0));
+        buttonPanel.setOpaque(false);
+        buttonPanel.add(startButton);
+        buttonPanel.add(imageButton);
 
         errorLabel.setForeground(new Color(255, 120, 120));
         errorLabel.setFont(new Font("Arial", Font.BOLD, 13));
@@ -76,7 +98,7 @@ public class WelcomePanel extends JPanel {
 
         constraints.gridy = 2;
         constraints.insets = new Insets(10, 0, 4, 0);
-        formPanel.add(startButton, constraints);
+        formPanel.add(buttonPanel, constraints);
 
         constraints.gridy = 3;
         constraints.insets = new Insets(2, 0, 0, 0);
@@ -109,6 +131,22 @@ public class WelcomePanel extends JPanel {
                 startGame();
             }
         });
+    }
+
+    /**
+     * Muestra una imagen del juego dentro de un popup.
+     */
+    private void showImagePopup() {
+        Image image = popupImage != null ? popupImage : welcomeImage;
+        if (image == null) {
+            JOptionPane.showMessageDialog(this, "No se pudo cargar la imagen.");
+            return;
+        }
+
+        Image scaledImage = image.getScaledInstance(520, 360, Image.SCALE_SMOOTH);
+        JLabel imageLabel = new JLabel(new ImageIcon(scaledImage));
+        JOptionPane.showMessageDialog(this, imageLabel, "Instrucciones", JOptionPane.PLAIN_MESSAGE);
+        requestNameFocus();
     }
 
     /**
@@ -153,11 +191,22 @@ public class WelcomePanel extends JPanel {
      * @return imagen de bienvenida, o {@code null} si no se pudo encontrar
      */
     private Image loadWelcomeImage() {
+        return loadImage(WELCOME_IMAGE, "/images/welcomeScreen.png");
+    }
+
+    /**
+     * Carga una imagen desde archivo local o desde el classpath.
+     *
+     * @param filePath     ruta del archivo dentro del proyecto
+     * @param resourcePath ruta de respaldo dentro del classpath
+     * @return imagen cargada, o {@code null} si no se pudo encontrar
+     */
+    private Image loadImage(String filePath, String resourcePath) {
         Path currentDirectory = Paths.get("").toAbsolutePath();
         Path[] candidates = {
-                Paths.get(WELCOME_IMAGE),
-                currentDirectory.resolve(WELCOME_IMAGE),
-                currentDirectory.resolve("src/main/resources/images/welcomeScreen.png")
+                Paths.get(filePath),
+                currentDirectory.resolve(filePath),
+                currentDirectory.resolve(filePath.replace("OldPato/src/main/resources/", "src/main/resources/"))
         };
 
         for (Path candidate : candidates) {
@@ -167,7 +216,7 @@ public class WelcomePanel extends JPanel {
             }
         }
 
-        URL resource = getClass().getResource("/images/welcomeScreen.png");
+        URL resource = getClass().getResource(resourcePath);
         if (resource != null) {
             return new ImageIcon(resource).getImage();
         }

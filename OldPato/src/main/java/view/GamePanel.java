@@ -33,6 +33,8 @@ public class GamePanel extends JPanel {
     private Scope scope;
     private Font arcadeFont;
     private EvilDuck evilDuck;
+    private int aimX;
+    private int aimY;
 
     /**
      * Crea el panel, carga las imagenes iniciales e inicia los hilos de los patos.
@@ -59,16 +61,12 @@ public class GamePanel extends JPanel {
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                scope.setX(e.getX() - 40);
-                scope.setY(e.getY() - 40);
-                repaint();
+                setAimPosition(e.getX(), e.getY());
             }
 
             @Override
             public void mouseDragged(MouseEvent e) {
-                scope.setX(e.getX() - 40);
-                scope.setY(e.getY() - 40);
-                repaint();
+                setAimPosition(e.getX(), e.getY());
             }
         });
 
@@ -144,5 +142,49 @@ public class GamePanel extends JPanel {
      */
     public List<Duck> getDucks() {
         return ducks;
+    }
+
+    /**
+     * Mueve la mira al punto indicado y mantiene sus coordenadas centrales.
+     *
+     * @param x coordenada horizontal de apuntado
+     * @param y coordenada vertical de apuntado
+     */
+    public void setAimPosition(int x, int y) {
+        aimX = clamp(x, 0, Math.max(0, getWidth() - 1));
+        aimY = clamp(y, 0, Math.max(0, getHeight() - 1));
+        scope.setX(aimX - 40);
+        scope.setY(aimY - 40);
+        repaint();
+    }
+
+    /**
+     * Obtiene la coordenada horizontal actual de la mira.
+     *
+     * @return coordenada x de la mira
+     */
+    public int getAimX() {
+        return aimX;
+    }
+
+    /**
+     * Obtiene la coordenada vertical actual de la mira.
+     *
+     * @return coordenada y de la mira
+     */
+    public int getAimY() {
+        return aimY;
+    }
+
+    /**
+     * Restringe un valor dentro de un rango.
+     *
+     * @param value valor a restringir
+     * @param min valor minimo
+     * @param max valor maximo
+     * @return valor dentro del rango indicado
+     */
+    private int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
     }
 }
