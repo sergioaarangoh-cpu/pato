@@ -7,7 +7,7 @@ import java.net.URL;
 /**
  * Representa un pato en el juego que se mueve rebotando en los bordes.
  *
- * @author sergioaarangoh-cpu, juancho-2006
+ * @author sergioaarangoh-cpu, juancho-2006, victorm
  * @version 2.0
  */
 public class Duck extends Entity implements Runnable {
@@ -37,8 +37,8 @@ public class Duck extends Entity implements Runnable {
         this.panelHeight = panelHeight;
         this.leftImagePath = leftImage;
         this.rightImagePath = rightImage;
-        this.speedX = 4;
-        this.speedY = 2;
+        this.speedX = 7;
+        this.speedY = 5;
     }
 
     /**

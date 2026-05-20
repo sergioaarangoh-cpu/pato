@@ -32,6 +32,7 @@ public class GamePanel extends JPanel {
     private SoundManager soundManager;
     private Scope scope;
     private Font arcadeFont;
+    private EvilDuck evilDuck;
 
     /**
      * Crea el panel, carga las imagenes iniciales e inicia los hilos de los patos.
@@ -79,12 +80,28 @@ public class GamePanel extends JPanel {
         ducks.add(new Duck(500, 300, 900, 700, DUCK_LEFT_IMAGE, DUCK_RIGHT_IMAGE));
         ducks.add(new Duckencia(450, 350, 900, 700, DUCKENCIA_LEFT_IMAGE, DUCKENCIA_RIGHT_IMAGE));
         ducks.add(new Duckencia(700, 400, 900, 700, DUCKENCIA_LEFT_IMAGE, DUCKENCIA_RIGHT_IMAGE));
-        ducks.add(new EvilDuck(200, 200, 900, 700, EVIL_DUCK_LEFT_IMAGE, EVIL_DUCK_RIGHT_IMAGE));
+        ducks.add(new Duckencia(200, 500, 900, 700, DUCKENCIA_LEFT_IMAGE, DUCKENCIA_RIGHT_IMAGE));
+        ducks.add(new Duckencia(600, 150, 900, 700, DUCKENCIA_LEFT_IMAGE, DUCKENCIA_RIGHT_IMAGE));
+        evilDuck = new EvilDuck(200, 200, 900, 700, EVIL_DUCK_LEFT_IMAGE, EVIL_DUCK_RIGHT_IMAGE);
 
         for (Duck duck : ducks) {
             Thread hiloDuck = new Thread(duck);
             hiloDuck.start();
         }
+
+        Thread evilThread = new Thread(evilDuck);
+        evilThread.start();
+        Timer evilDuckTimer = new Timer(5000, e -> {
+            if (ducks.contains(evilDuck)) {
+                ducks.remove(evilDuck);
+                System.out.println("EvilDuck desapareció");
+            } else {
+                ducks.add(evilDuck);
+                System.out.println("EvilDuck apareció");
+            }
+            repaint();
+        });
+        evilDuckTimer.start();
 
         Timer timer = new Timer(1000 / 60, e -> {
             for (Duck duck : ducks) {

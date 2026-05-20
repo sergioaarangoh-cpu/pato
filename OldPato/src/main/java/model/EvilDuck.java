@@ -21,5 +21,7 @@ public class EvilDuck extends Duck {
      */
     public EvilDuck(int x, int y, int panelWidth, int panelHeight, String leftImage, String rightImage) {
         super(x, y, panelWidth, panelHeight, leftImage, rightImage);
+        this.width = 70;
+        this.height = 70;
     }
 }
