@@ -149,7 +149,7 @@ public class GameController {
         if (!screenManager.isPlaying()) return;
         if (!mouseHandler.isShooting()) return;
 
-        checkShotAt(mouseHandler.getMouseX(), mouseHandler.getMouseY());
+        checkShotAt(gamePanel.getAimX(), gamePanel.getAimY());
     }
 
     /**
@@ -161,6 +161,7 @@ public class GameController {
     private void checkShotAt(int mx, int my) {
         // sonido de disparo
         soundManager.playSound(GUNSHOT_SOUND);
+        gamePanel.showExplosionAt(mx, my);
 
         for (Duck duck : gamePanel.getDucks()) {
             if (mx >= duck.getX() && mx <= duck.getX() + 120 &&

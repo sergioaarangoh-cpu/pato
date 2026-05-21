@@ -26,8 +26,13 @@ public class GamePanel extends JPanel {
     private static final String BACKGROUND_SOUND = "/sounds/background.wav";
     private static final String EVIL_DUCK_LEFT_IMAGE = "/images/evilduckleft.png";
     private static final String EVIL_DUCK_RIGHT_IMAGE = "/images/evilduckright.png";
+    private static final String EXPLOSION_IMAGE = "/images/explosion.png";
+    private static final int EXPLOSION_DURATION_MS = 200;
+    private static final int EXPLOSION_SCALE_NUMERATOR = 3;
+    private static final int EXPLOSION_SCALE_DIVISOR = 8;
 
     private Image fondo;
+    private Image explosionImage;
     private List<Duck> ducks;
     private SoundManager soundManager;
     private Scope scope;
@@ -35,6 +40,10 @@ public class GamePanel extends JPanel {
     private EvilDuck evilDuck;
     private int aimX;
     private int aimY;
+    private int explosionX;
+    private int explosionY;
+    private boolean showExplosion;
+    private Timer explosionTimer;
 
     /**
      * Crea el panel, carga las imagenes iniciales e inicia los hilos de los patos.
@@ -55,8 +64,14 @@ public class GamePanel extends JPanel {
         }
 
         fondo = new ImageIcon(getClass().getResource(BACKGROUND_IMAGE)).getImage();
+        explosionImage = new ImageIcon(getClass().getResource(EXPLOSION_IMAGE)).getImage();
         ducks = new ArrayList<>();
         scope = new Scope();
+        explosionTimer = new Timer(EXPLOSION_DURATION_MS, e -> {
+            showExplosion = false;
+            repaint();
+        });
+        explosionTimer.setRepeats(false);
 
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
@@ -92,10 +107,8 @@ public class GamePanel extends JPanel {
         Timer evilDuckTimer = new Timer(5000, e -> {
             if (ducks.contains(evilDuck)) {
                 ducks.remove(evilDuck);
-                System.out.println("EvilDuck desapareció");
             } else {
                 ducks.add(evilDuck);
-                System.out.println("EvilDuck apareció");
             }
             repaint();
         });
@@ -132,7 +145,39 @@ public class GamePanel extends JPanel {
         for (Duck duck : ducks) {
             duck.draw(graphics);
         }
+        drawExplosion(graphics);
         scope.draw(graphics);
+    }
+
+    /**
+     * Muestra la explosion durante un instante en la posicion indicada.
+     *
+     * @param x coordenada horizontal del disparo
+     * @param y coordenada vertical del disparo
+     */
+    public void showExplosionAt(int x, int y) {
+        explosionX = x;
+        explosionY = y;
+        showExplosion = true;
+        explosionTimer.restart();
+        repaint();
+    }
+
+    /**
+     * Dibuja la explosion centrada en el ultimo disparo.
+     *
+     * @param graphics contexto grafico usado por Swing
+     */
+    private void drawExplosion(Graphics graphics) {
+        if (!showExplosion || explosionImage == null) {
+            return;
+        }
+
+        int width = explosionImage.getWidth(this);
+        int height = explosionImage.getHeight(this);
+        width = width * EXPLOSION_SCALE_NUMERATOR / EXPLOSION_SCALE_DIVISOR;
+        height = height * EXPLOSION_SCALE_NUMERATOR / EXPLOSION_SCALE_DIVISOR;
+        graphics.drawImage(explosionImage, explosionX - width / 2, explosionY - height / 2, width, height, this);
     }
 
     /**
@@ -153,8 +198,8 @@ public class GamePanel extends JPanel {
     public void setAimPosition(int x, int y) {
         aimX = clamp(x, 0, Math.max(0, getWidth() - 1));
         aimY = clamp(y, 0, Math.max(0, getHeight() - 1));
-        scope.setX(aimX - 40);
-        scope.setY(aimY - 40);
+        scope.setX(aimX - scope.getWidth() / 2);
+        scope.setY(aimY - scope.getHeight() / 2);
         repaint();
     }
 
@@ -189,5 +234,8 @@ public class GamePanel extends JPanel {
     }
 
     public void stopGame() {
+        if (explosionTimer != null) {
+            explosionTimer.stop();
+        }
     }
 }

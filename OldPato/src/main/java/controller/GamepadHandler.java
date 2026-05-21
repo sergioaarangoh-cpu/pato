@@ -18,8 +18,8 @@ public class GamepadHandler {
     private Controller controller;
     private Component xAxis;
     private Component yAxis;
-    private Component shootButton;
     private Component shootTrigger;
+    private Component shootTriggerButton;
 
     private int aimX;
     private int aimY;
@@ -55,7 +55,7 @@ public class GamepadHandler {
         aimY = clamp(aimY, 0, Math.max(0, panelHeight - 1));
 
         previousShootPressed = shootPressed;
-        shootPressed = isButtonPressed(shootButton) || readComponent(shootTrigger) > 0.55f;
+        shootPressed = readComponent(shootTrigger) > 0.55f || readComponent(shootTriggerButton) > 0.5f;
     }
 
     public void centerAim(int panelWidth, int panelHeight) {
@@ -83,8 +83,8 @@ public class GamepadHandler {
         controller = null;
         xAxis = null;
         yAxis = null;
-        shootButton = null;
         shootTrigger = null;
+        shootTriggerButton = null;
         available = false;
     }
 
@@ -157,8 +157,8 @@ public class GamepadHandler {
     private void configureController(Controller selectedController) {
         xAxis = null;
         yAxis = null;
-        shootButton = null;
         shootTrigger = null;
+        shootTriggerButton = null;
 
         for (Component component : selectedController.getComponents()) {
             String identifier = String.valueOf(component.getIdentifier()).toLowerCase();
@@ -168,12 +168,40 @@ public class GamepadHandler {
                 xAxis = component;
             } else if (yAxis == null && ("y".equals(identifier) || name.contains("y axis") || name.contains("y-axis"))) {
                 yAxis = component;
-            } else if (shootTrigger == null && ("z".equals(identifier) || "rz".equals(identifier) || name.contains("trigger"))) {
+            } else if (shootTrigger == null && isRightTrigger(identifier, name)) {
                 shootTrigger = component;
-            } else if (shootButton == null && ("0".equals(identifier) || name.contains("button 0") || name.equals("a"))) {
-                shootButton = component;
+            } else if (shootTriggerButton == null && isRightTriggerButton(identifier, name)) {
+                shootTriggerButton = component;
             }
         }
+    }
+
+    /**
+     * Verifica si un componente corresponde al gatillo derecho R2.
+     *
+     * @param identifier identificador del componente
+     * @param name       nombre del componente
+     * @return {@code true} si el componente se puede usar como R2
+     */
+    private boolean isRightTrigger(String identifier, String name) {
+        return "z".equals(identifier)
+                || "rz".equals(identifier)
+                || name.contains("right trigger")
+                || name.contains("right z")
+                || name.contains("trigger");
+    }
+
+    /**
+     * Verifica si un componente corresponde al boton digital R2.
+     *
+     * @param identifier identificador del componente
+     * @param name       nombre del componente
+     * @return {@code true} si el componente se puede usar como boton R2
+     */
+    private boolean isRightTriggerButton(String identifier, String name) {
+        return "7".equals(identifier)
+                || name.contains("r2")
+                || name.contains("button 7");
     }
 
     private void printControllerMapping(Controller selectedController) {
@@ -188,10 +216,6 @@ public class GamepadHandler {
             return 0;
         }
         return component.getPollData();
-    }
-
-    private boolean isButtonPressed(Component component) {
-        return readComponent(component) > 0.5f;
     }
 
     private int clamp(int value, int min, int max) {

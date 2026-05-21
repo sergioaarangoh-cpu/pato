@@ -20,13 +20,23 @@ public class WelcomePanel extends JPanel {
     private static final String WELCOME_IMAGE = "OldPato/src/main/resources/images/welcomeScreen.png";
     private static final String POPUP_IMAGE = "OldPato/src/main/resources/images/instructions.png";
     private static final String LOGO_IMAGE = "OldPato/src/main/resources/images/logo_uam.png";
+    private static final String JUANCHO_IMAGE = "OldPato/src/main/resources/images/juancho.png";
+    private static final String CHECHO_IMAGE = "OldPato/src/main/resources/images/checho.png";
+    private static final String VICTOR_IMAGE = "OldPato/src/main/resources/images/victor.png";
     private static final String FOOTER_TEXT = "OldPato - por Sergio, Juan Sebastian y Victor - POO";
     private static final int LOGO_SIZE = 50;
+    private static final int AUTHOR_IMAGE_WIDTH = 63;
+    private static final int AUTHOR_IMAGE_HEIGHT = 50;
+    private static final int AUTHOR_IMAGE_GAP = 12;
+    private static final int AUTHOR_IMAGES_ABOVE_FOOTER = 20;
     private static final int FOOTER_BOTTOM_MARGIN = 12;
 
     private final Image welcomeImage;
     private final Image popupImage;
     private final Image logoImage;
+    private final Image juanchoImage;
+    private final Image chechoImage;
+    private final Image victorImage;
     private final Consumer<String> onStart;
     private final JTextField nameField;
     private final JLabel errorLabel;
@@ -43,6 +53,9 @@ public class WelcomePanel extends JPanel {
         this.welcomeImage = loadWelcomeImage();
         this.popupImage = loadImage(POPUP_IMAGE, "/images/instructions.png");
         this.logoImage = loadImage(LOGO_IMAGE, "/images/logo_uam.png");
+        this.juanchoImage = loadImage(JUANCHO_IMAGE, "/images/juancho.png");
+        this.chechoImage = loadImage(CHECHO_IMAGE, "/images/checho.png");
+        this.victorImage = loadImage(VICTOR_IMAGE, "/images/victor.png");
         this.arcadeFont = loadArcadeFont(10f);
         this.nameField = new JTextField(18);
         this.errorLabel = new JLabel(" ");
@@ -264,6 +277,37 @@ public class WelcomePanel extends JPanel {
         FontMetrics metrics = graphics.getFontMetrics();
         int footerX = (getWidth() - metrics.stringWidth(FOOTER_TEXT)) / 2;
         int footerY = getHeight() - FOOTER_BOTTOM_MARGIN;
+        drawAuthorImages(graphics, footerY);
         graphics.drawString(FOOTER_TEXT, Math.max(0, footerX), footerY);
+    }
+
+    /**
+     * Dibuja las imagenes de los autores centradas encima del texto inferior.
+     *
+     * @param graphics contexto grafico usado por Swing
+     * @param footerY  coordenada vertical del texto inferior
+     */
+    private void drawAuthorImages(Graphics graphics, int footerY) {
+        int totalWidth = AUTHOR_IMAGE_WIDTH * 3 + AUTHOR_IMAGE_GAP * 2;
+        int startX = (getWidth() - totalWidth) / 2;
+        int imageY = footerY - AUTHOR_IMAGES_ABOVE_FOOTER - AUTHOR_IMAGE_HEIGHT;
+
+        drawAuthorImage(graphics, chechoImage, startX, imageY);
+        drawAuthorImage(graphics, juanchoImage, startX + AUTHOR_IMAGE_WIDTH + AUTHOR_IMAGE_GAP, imageY);
+        drawAuthorImage(graphics, victorImage, startX + (AUTHOR_IMAGE_WIDTH + AUTHOR_IMAGE_GAP) * 2, imageY);
+    }
+
+    /**
+     * Dibuja una imagen de autor con el tamano definido para la bienvenida.
+     *
+     * @param graphics contexto grafico usado por Swing
+     * @param image    imagen del autor
+     * @param x        coordenada horizontal
+     * @param y        coordenada vertical
+     */
+    private void drawAuthorImage(Graphics graphics, Image image, int x, int y) {
+        if (image != null) {
+            graphics.drawImage(image, x, y, AUTHOR_IMAGE_WIDTH, AUTHOR_IMAGE_HEIGHT, this);
+        }
     }
 }

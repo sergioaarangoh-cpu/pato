@@ -5,8 +5,6 @@ import util.ScoreManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +20,7 @@ public class GameOverPanel extends JPanel {
     private final Image gameOverImage;
     private final Runnable onReturn;
     private final Font arcadeFont;
+    private final JButton returnButton;
     private List<ScoreManager.ScoreEntry> topScores;
     private String playerName;
     private int score;
@@ -37,9 +36,11 @@ public class GameOverPanel extends JPanel {
         this.onReturn = onReturn;
         this.gameOverImage = loadImage();
         this.arcadeFont = loadArcadeFont();
+        this.returnButton = new JButton("Volver al menu");
         this.topScores = new ArrayList<>();
         this.playerName = "";
         setFocusable(true);
+        setLayout(null);
         configureReturnActions();
     }
 
@@ -47,12 +48,10 @@ public class GameOverPanel extends JPanel {
      * Configura las entradas para volver al menú.
      */
     private void configureReturnActions() {
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                returnToMenu();
-            }
-        });
+        returnButton.setBounds(30, 450, 260, 40);
+        returnButton.setFont(arcadeFont);
+        returnButton.addActionListener(e -> returnToMenu());
+        add(returnButton);
 
         getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ENTER"), "returnToMenu");
         getActionMap().put("returnToMenu", new AbstractAction() {

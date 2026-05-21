@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Gestiona el almacenamiento y consulta de puntajes.
  *
- * @author TuNombre
+ * @author sergioaarangoh-cpu, juancho-2006, victor48994850938630968350698509680498
  */
 public final class ScoreManager {
 
