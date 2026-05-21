@@ -11,3 +11,4 @@ lelio;0
 lilio;0
 pilio;0
 vic;10
+fewa;10
