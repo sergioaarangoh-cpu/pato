@@ -107,10 +107,16 @@ public class GamePanel extends JPanel {
         Timer evilDuckTimer = new Timer(5000, e -> {
             if (ducks.contains(evilDuck)) {
                 ducks.remove(evilDuck);
-            } else {
-                ducks.add(evilDuck);
             }
+            ducks.add(evilDuck);
             repaint();
+
+            Timer hideEvilDuckTimer = new Timer(2000, hideEvent -> {
+                ducks.remove(evilDuck);
+                repaint();
+            });
+            hideEvilDuckTimer.setRepeats(false);
+            hideEvilDuckTimer.start();
         });
         evilDuckTimer.start();
 

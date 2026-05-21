@@ -186,7 +186,7 @@ public class GameController {
                     // disparar a un Duck normal suma puntos y tiempo
                     soundManager.playSound(DUCK_SOUND);
                     gameState.setScore(gameState.getScore() + 10);
-                    gameState.setRemainingTime(gameState.getRemainingTime() + 5);
+                    gameState.setRemainingTime(gameState.getRemainingTime() + 1);
                 }
             }
         }
