@@ -1,4 +1,1 @@
-oooo;10
-rolba;0
-tilio;20
-aora;20
+chech;2230
