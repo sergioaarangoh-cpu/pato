@@ -41,7 +41,7 @@ public class WelcomePanel extends JPanel {
     public WelcomePanel(Consumer<String> onStart) {
         this.onStart = onStart;
         this.welcomeImage = loadWelcomeImage();
-        this.popupImage = loadImage(POPUP_IMAGE, "/images/background.png");
+        this.popupImage = loadImage(POPUP_IMAGE, "/images/instructions.png");
         this.logoImage = loadImage(LOGO_IMAGE, "/images/logo_uam.png");
         this.arcadeFont = loadArcadeFont(10f);
         this.nameField = new JTextField(18);
