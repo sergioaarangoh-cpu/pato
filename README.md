@@ -75,22 +75,6 @@ Los puntajes se guardan en `OldPato/scores.txt`, por lo que no se pierden al cer
 | Iniciar juego | Enter o botón Iniciar |
 | Volver al menú desde Game Over | Enter o botón Volver al menu |
 
-## Instalación y Ejecución
-
-### Opción recomendada: IntelliJ IDEA
-
-1. Abre el proyecto desde la carpeta raíz `pato`.
-2. Importa el `pom.xml` como proyecto Maven.
-3. Verifica que el JDK esté configurado.
-4. Ejecuta la clase `view.MainFrame`.
-
-### Maven
-
-El proyecto incluye `pom.xml` con las dependencias de JInput:
-
-```bash
-mvn compile
-```
 
 ## Compatibilidad con Mando
 
