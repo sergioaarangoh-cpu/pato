@@ -1,129 +1,138 @@
 package util;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 /**
- * Guarda y consulta los puntajes historicos de OldPato.
+ * Gestiona el almacenamiento y consulta de puntajes.
+ *
+ * @author TuNombre
  */
 public final class ScoreManager {
 
-    private static final String SCORE_FILE_NAME = "scores.txt";
+    private static final String SCORE_FILE_PATH =
+            "OldPato/src/main/resources/data/scores.txt";
+
     private static final String FIELD_SEPARATOR = ";";
 
     private ScoreManager() {
     }
 
     /**
-     * Guarda un puntaje sin borrar los registros anteriores.
+     * Guarda un puntaje.
      *
      * @param playerName nombre del jugador
-     * @param score      puntaje conseguido
+     * @param score      puntaje obtenido
      */
     public static void saveScore(String playerName, int score) {
-        try {
-            Path scoreFile = getScoreFile();
-            Path parent = scoreFile.getParent();
-            if (parent != null) {
-                Files.createDirectories(parent);
-            }
 
-            String line = sanitizePlayerName(playerName) + FIELD_SEPARATOR + score + System.lineSeparator();
-            Files.write(
-                    scoreFile,
-                    line.getBytes(StandardCharsets.UTF_8),
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.APPEND
-            );
-        } catch (IOException e) {
-            System.out.println("No se pudo guardar el puntaje: " + e.getMessage());
-        }
+        String record =
+                sanitizePlayerName(playerName)
+                        + FIELD_SEPARATOR
+                        + score;
+
+        FileManager.appendLine(SCORE_FILE_PATH, record);
     }
 
     /**
-     * Obtiene los mejores puntajes guardados.
+     * Obtiene los mejores puntajes.
      *
-     * @param limit cantidad maxima de puntajes a devolver
-     * @return lista ordenada de mayor a menor puntaje
+     * @param limit cantidad máxima de resultados
+     * @return lista ordenada de mayor a menor
      */
     public static List<ScoreEntry> getTopScores(int limit) {
+
         List<ScoreEntry> scores = readScores();
-        scores.sort(Comparator.comparingInt(ScoreEntry::getScore).reversed());
-        return new ArrayList<>(scores.subList(0, Math.min(limit, scores.size())));
+
+        scores.sort(
+                Comparator.comparingInt(
+                        ScoreEntry::getScore
+                ).reversed()
+        );
+
+        return new ArrayList<>(
+                scores.subList(
+                        0,
+                        Math.min(limit, scores.size())
+                )
+        );
     }
 
     /**
-     * Lee todos los puntajes almacenados en el archivo.
+     * Lee todos los puntajes almacenados.
      *
-     * @return registros validos encontrados
+     * @return lista de puntajes
      */
     private static List<ScoreEntry> readScores() {
+
         List<ScoreEntry> scores = new ArrayList<>();
-        Path scoreFile = getScoreFile();
-        if (!Files.exists(scoreFile)) {
-            return scores;
+
+        List<String> lines =
+                FileManager.readLines(SCORE_FILE_PATH);
+
+        for (String line : lines) {
+
+            String[] parts =
+                    line.split(FIELD_SEPARATOR, 2);
+
+            if (parts.length != 2) {
+                continue;
+            }
+
+            try {
+
+                scores.add(
+                        new ScoreEntry(
+                                parts[0],
+                                Integer.parseInt(parts[1].trim())
+                        )
+                );
+
+            } catch (NumberFormatException e) {
+                System.out.println(
+                        "Registro inválido encontrado: "
+                                + line
+                );
+            }
         }
 
-        try {
-            for (String line : Files.readAllLines(scoreFile, StandardCharsets.UTF_8)) {
-                String[] parts = line.split(FIELD_SEPARATOR, 2);
-                if (parts.length != 2) {
-                    continue;
-                }
-                scores.add(new ScoreEntry(parts[0], Integer.parseInt(parts[1].trim())));
-            }
-        } catch (IOException | NumberFormatException e) {
-            System.out.println("No se pudieron leer los puntajes: " + e.getMessage());
-        }
         return scores;
     }
 
     /**
-     * Obtiene la ruta donde se guardan los puntajes.
-     *
-     * @return ruta del archivo persistente de puntajes
-     */
-    private static Path getScoreFile() {
-        Path projectFolder = Paths.get("OldPato");
-        if (Files.exists(projectFolder)) {
-            return projectFolder.resolve(SCORE_FILE_NAME);
-        }
-        return Paths.get(SCORE_FILE_NAME);
-    }
-
-    /**
-     * Limpia el nombre para mantener el archivo de puntajes parseable.
+     * Limpia el nombre para evitar errores al guardar.
      *
      * @param playerName nombre ingresado
-     * @return nombre seguro para guardar
+     * @return nombre válido
      */
     private static String sanitizePlayerName(String playerName) {
-        String name = playerName == null ? "" : playerName.trim();
+
+        String name =
+                playerName == null
+                        ? ""
+                        : playerName.trim();
+
         if (name.isEmpty()) {
-            name = "Jugador";
+            return "Jugador";
         }
+
         return name.replace(FIELD_SEPARATOR, ",");
     }
 
     /**
-     * Registro de puntaje de una partida.
+     * Representa un registro de puntaje.
      */
     public static class ScoreEntry {
+
         private final String playerName;
         private final int score;
 
         /**
-         * Crea un registro de puntaje.
+         * Constructor.
          *
          * @param playerName nombre del jugador
-         * @param score      puntaje conseguido
+         * @param score      puntaje obtenido
          */
         public ScoreEntry(String playerName, int score) {
             this.playerName = playerName;
@@ -133,14 +142,14 @@ public final class ScoreManager {
         /**
          * Obtiene el nombre del jugador.
          *
-         * @return nombre del jugador
+         * @return nombre
          */
         public String getPlayerName() {
             return playerName;
         }
 
         /**
-         * Obtiene el puntaje conseguido.
+         * Obtiene el puntaje.
          *
          * @return puntaje
          */
