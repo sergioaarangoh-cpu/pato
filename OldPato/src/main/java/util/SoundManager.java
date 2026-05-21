@@ -24,7 +24,7 @@ public class SoundManager {
     public void playMusic(String path) {
         stopMusic();
         try {
-            URL url = new java.io.File(path).toURI().toURL();
+            URL url = getClass().getResource(path);
             if (url == null) {
                 System.out.println("No se encontró el audio: " + path);
                 return;
@@ -63,7 +63,11 @@ public class SoundManager {
      */
     public void playSound(String path, Runnable onFinish) {
         try {
-            URL url = new java.io.File(path).toURI().toURL();
+            URL url = getClass().getResource(path);
+            if (url == null) {
+                System.out.println("No se encontró el audio: " + path);
+                return;
+            }
             AudioInputStream audio = AudioSystem.getAudioInputStream(url);
             Clip clip = AudioSystem.getClip();
             clip.open(audio);

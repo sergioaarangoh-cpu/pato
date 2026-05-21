@@ -24,9 +24,9 @@ public class MainFrame extends JFrame {
     private static final String WELCOME_SCREEN = "welcome";
     private static final String GAME_SCREEN = "game";
     private static final String GAME_OVER_SCREEN = "gameover";
-    private static final String WELCOME_MUSIC = "OldPato\\src\\main\\resources\\sounds\\welcomeMusic.wav";
-    private static final String START_SOUND = "OldPato\\src\\main\\resources\\sounds\\startsound.wav";
-    private static final String LOST_SOUND = "OldPato\\src\\main\\resources\\sounds\\youlost.wav";
+    private static final String WELCOME_MUSIC = "/sounds/welcomeMusic.wav";
+    private static final String START_SOUND = "/sounds/startsound.wav";
+    private static final String LOST_SOUND = "/sounds/youlost.wav";
 
     private final SoundManager soundManager;
     private final CardLayout cardLayout;

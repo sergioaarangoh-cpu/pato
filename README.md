@@ -33,7 +33,14 @@ El jugador controla una mira en la pantalla y debe disparar a los patos que vuel
 | Iniciar juego | Enter o clic |
 | Volver al menú | Escape |
 
-> 🎮 El soporte para mando usa JInput. En IntelliJ, importa el `pom.xml` del proyecto para descargar `jinput` y `windows-plugin`.
+> 🎮 El soporte para mando usa JInput. Agrega manualmente los jars en IntelliJ (`Project Structure > Modules > Dependencies`):
+> - `jinput-2.0.10.jar`
+> - `jinput-2.0.10-natives-all.jar` (o el nativo de tu sistema operativo)
+
+## Compatibilidad Linux/Windows
+- El juego carga imágenes, fuentes y sonidos por **classpath** (`/images`, `/fonts`, `/sounds`), por lo que funciona con rutas portables en Linux y Windows.
+- Si aparece `JInput no reportó controladores`, el sistema operativo no está exponiendo el mando a JInput en ese momento.
+- En Linux valida primero a nivel SO con `ls /dev/input/js*`, `ls /dev/input/event*` y `jstest /dev/input/js0`.
 
 ## Tecnologías
 - Java (OpenJDK 26)

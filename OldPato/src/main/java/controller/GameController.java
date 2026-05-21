@@ -18,10 +18,10 @@ import javax.swing.*;
  */
 public class GameController {
 
-    private static final String GUNSHOT_SOUND = "OldPato\\src\\main\\resources\\sounds\\gunshot.wav";
-    private static final String DUCK_SOUND = "OldPato\\src\\main\\resources\\sounds\\duck1.wav";
-    private static final String DUCKENCIA_SOUND = "OldPato\\src\\main\\resources\\sounds\\duckencia.wav";
-    private static final String EVIL_DUCK_SOUND = "OldPato\\src\\main\\resources\\sounds\\evilduck.wav";
+    private static final String GUNSHOT_SOUND = "/sounds/gunshot.wav";
+    private static final String DUCK_SOUND = "/sounds/duck1.wav";
+    private static final String DUCKENCIA_SOUND = "/sounds/duckencia.wav";
+    private static final String EVIL_DUCK_SOUND = "/sounds/evilduck.wav";
 
     private GameState gameState;
     private GamePanel gamePanel;
@@ -102,11 +102,14 @@ public class GameController {
      * Actualiza el mando y aplica sus acciones sobre el juego.
      */
     private void handleGamepadInput() {
-        if (!screenManager.isPlaying() || !gamepadHandler.isAvailable()) {
+        if (!screenManager.isPlaying()) {
             return;
         }
 
         gamepadHandler.update(gamePanel.getWidth(), gamePanel.getHeight());
+        if (!gamepadHandler.isAvailable()) {
+            return;
+        }
         gamePanel.setAimPosition(gamepadHandler.getAimX(), gamepadHandler.getAimY());
 
         if (gamepadHandler.wasShootPressed()) {

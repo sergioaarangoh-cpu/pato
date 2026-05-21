@@ -42,11 +42,14 @@ public class GamepadHandler {
      */
     public void update(int panelWidth, int panelHeight) {
         if (!available || controller == null) {
-            return;
+            findController();
+            if (!available || controller == null) {
+                return;
+            }
         }
 
         try {
-            boolean polled = (boolean) controller.getClass().getMethod("poll").invoke(controller);
+            boolean polled = (boolean) invokeNoArgs(controller.getClass(), controller, "poll");
             if (!polled) {
                 available = false;
                 System.out.println("Mando desconectado.");
@@ -138,26 +141,37 @@ public class GamepadHandler {
     private void findController() {
         try {
             Class<?> environmentClass = Class.forName("net.java.games.input.ControllerEnvironment");
-            Object environment = environmentClass.getMethod("getDefaultEnvironment").invoke(null);
-            Object[] controllers = (Object[]) environment.getClass().getMethod("getControllers").invoke(environment);
+            Object environment = invokeNoArgs(environmentClass, null, "getDefaultEnvironment");
+            Object[] controllers = (Object[]) invokeNoArgs(environment.getClass(), environment, "getControllers");
+            if (controllers == null || controllers.length == 0) {
+                System.out.println("JInput no reportó controladores.");
+                available = false;
+                return;
+            }
 
             for (Object candidate : controllers) {
+                String candidateName = String.valueOf(invokeNoArgs(candidate.getClass(), candidate, "getName"));
+                String candidateType = String.valueOf(invokeNoArgs(candidate.getClass(), candidate, "getType"));
+                System.out.println("Controlador detectado por JInput: " + candidateName + " [type=" + candidateType + "]");
                 if (isGamepad(candidate)) {
                     configureController(candidate);
                     if (xAxis != null && yAxis != null) {
                         controller = candidate;
                         available = true;
-                        System.out.println("Mando detectado: " + controller.getClass().getMethod("getName").invoke(controller));
+                        System.out.println("Mando detectado: " + invokeNoArgs(controller.getClass(), controller, "getName"));
                         return;
                     }
                 }
             }
 
             System.out.println("No se detecto un mando compatible.");
+            available = false;
         } catch (ClassNotFoundException e) {
             System.out.println("JInput no esta instalado. Agrega la libreria para usar el control de Xbox.");
+            available = false;
         } catch (Exception e) {
             System.out.println("No se pudo inicializar el mando: " + e.getMessage());
+            available = false;
         }
     }
 
@@ -169,9 +183,16 @@ public class GamepadHandler {
      * @throws Exception si falla la reflexion sobre JInput
      */
     private boolean isGamepad(Object candidate) throws Exception {
-        String type = String.valueOf(candidate.getClass().getMethod("getType").invoke(candidate)).toLowerCase();
-        String name = String.valueOf(candidate.getClass().getMethod("getName").invoke(candidate)).toLowerCase();
-        return type.contains("gamepad") || type.contains("stick") || name.contains("xbox");
+        String type = String.valueOf(invokeNoArgs(candidate.getClass(), candidate, "getType")).toLowerCase();
+        String name = String.valueOf(invokeNoArgs(candidate.getClass(), candidate, "getName")).toLowerCase();
+        return type.contains("gamepad")
+                || type.contains("stick")
+                || type.contains("unknown")
+                || name.contains("xbox")
+                || name.contains("x-input")
+                || name.contains("xinput")
+                || name.contains("wireless controller")
+                || name.contains("controller");
     }
 
     /**
@@ -181,19 +202,54 @@ public class GamepadHandler {
      * @throws Exception si falla la lectura de componentes
      */
     private void configureController(Object selectedController) throws Exception {
-        Object[] components = (Object[]) selectedController.getClass().getMethod("getComponents").invoke(selectedController);
-        for (Object component : components) {
-            String identifier = String.valueOf(component.getClass().getMethod("getIdentifier").invoke(component)).toLowerCase();
-            String name = String.valueOf(component.getClass().getMethod("getName").invoke(component)).toLowerCase();
+        xAxis = null;
+        yAxis = null;
+        shootButton = null;
+        shootTrigger = null;
 
-            if (xAxis == null && ("x".equals(identifier) || name.contains("x axis"))) {
+        Object[] components = (Object[]) invokeNoArgs(selectedController.getClass(), selectedController, "getComponents");
+        for (Object component : components) {
+            String identifier = String.valueOf(invokeNoArgs(component.getClass(), component, "getIdentifier")).toLowerCase();
+            String name = String.valueOf(invokeNoArgs(component.getClass(), component, "getName")).toLowerCase();
+
+            if (xAxis == null && ("x".equals(identifier) || identifier.endsWith(".x") || name.contains("x axis"))) {
                 xAxis = component;
-            } else if (yAxis == null && ("y".equals(identifier) || name.contains("y axis"))) {
+            } else if (yAxis == null && ("y".equals(identifier) || identifier.endsWith(".y") || name.contains("y axis"))) {
                 yAxis = component;
-            } else if (shootTrigger == null && ("z".equals(identifier) || "rz".equals(identifier) || name.contains("trigger"))) {
+            } else if (shootTrigger == null && ("z".equals(identifier) || "rz".equals(identifier)
+                    || identifier.endsWith(".z") || identifier.endsWith(".rz") || name.contains("trigger"))) {
                 shootTrigger = component;
-            } else if (shootButton == null && ("0".equals(identifier) || name.contains("button 0") || name.contains("a"))) {
+            } else if (shootButton == null && ("0".equals(identifier) || identifier.contains("button 0")
+                    || name.contains("button 0") || name.equals("a") || name.contains("south"))) {
                 shootButton = component;
+            }
+        }
+
+        assignFallbackAxes(components);
+    }
+
+    /**
+     * Si no se encontraron ejes X/Y por nombre, usa los primeros ejes analogicos absolutos.
+     *
+     * @param components lista de componentes del mando
+     * @throws Exception si falla la reflexion sobre componentes
+     */
+    private void assignFallbackAxes(Object[] components) throws Exception {
+        if (xAxis != null && yAxis != null) {
+            return;
+        }
+
+        for (Object component : components) {
+            boolean analog = (boolean) invokeNoArgs(component.getClass(), component, "isAnalog");
+            boolean relative = (boolean) invokeNoArgs(component.getClass(), component, "isRelative");
+            if (!analog || relative) {
+                continue;
+            }
+            if (xAxis == null) {
+                xAxis = component;
+            } else if (yAxis == null) {
+                yAxis = component;
+                return;
             }
         }
     }
@@ -209,7 +265,7 @@ public class GamepadHandler {
         if (component == null) {
             return 0;
         }
-        return ((Number) component.getClass().getMethod("getPollData").invoke(component)).floatValue();
+        return ((Number) invokeNoArgs(component.getClass(), component, "getPollData")).floatValue();
     }
 
     /**
@@ -224,6 +280,21 @@ public class GamepadHandler {
     }
 
     /**
+     * Invoca un metodo sin argumentos habilitando acceso reflejado cuando sea necesario.
+     *
+     * @param targetClass clase donde buscar el metodo
+     * @param target instancia destino, o {@code null} para metodos estaticos
+     * @param methodName nombre del metodo
+     * @return resultado de la invocacion
+     * @throws Exception si no se puede invocar el metodo
+     */
+    private Object invokeNoArgs(Class<?> targetClass, Object target, String methodName) throws Exception {
+        java.lang.reflect.Method method = targetClass.getDeclaredMethod(methodName);
+        method.setAccessible(true);
+        return method.invoke(target);
+    }
+
+    /**
      * Restringe un valor dentro de un rango.
      *
      * @param value valor a restringir
@@ -235,4 +306,3 @@ public class GamepadHandler {
         return Math.max(min, Math.min(max, value));
     }
 }
-

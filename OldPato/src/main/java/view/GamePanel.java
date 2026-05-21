@@ -23,7 +23,7 @@ public class GamePanel extends JPanel {
     private static final String DUCK_RIGHT_IMAGE = "/images/duckright.png";
     private static final String DUCKENCIA_LEFT_IMAGE = "/images/duckencialeft.png";
     private static final String DUCKENCIA_RIGHT_IMAGE = "/images/duckenciaright.png";
-    private static final String BACKGROUND_SOUND = "OldPato\\src\\main\\resources\\sounds\\background.wav";
+    private static final String BACKGROUND_SOUND = "/sounds/background.wav";
     private static final String EVIL_DUCK_LEFT_IMAGE = "/images/evilduckleft.png";
     private static final String EVIL_DUCK_RIGHT_IMAGE = "/images/evilduckright.png";
 
@@ -47,7 +47,7 @@ public class GamePanel extends JPanel {
         try {
             arcadeFont = Font.createFont(
                     Font.TRUETYPE_FONT,
-                    new java.io.File("OldPato\\src\\main\\resources\\fonts\\ARCADE_N.TTF")
+                    getClass().getResourceAsStream("/fonts/ARCADE_N.TTF")
             ).deriveFont(Font.PLAIN, 20f);
         } catch (Exception e) {
             System.out.println("Error cargando fuente: " + e.getMessage());
