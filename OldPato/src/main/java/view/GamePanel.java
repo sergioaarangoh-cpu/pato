@@ -29,10 +29,13 @@ public class GamePanel extends JPanel {
 
     private Image fondo;
     private List<Duck> ducks;
+    private List<Thread> duckThreads;
     private SoundManager soundManager;
     private Scope scope;
     private Font arcadeFont;
     private EvilDuck evilDuck;
+    private Timer evilDuckTimer;
+    private Timer repaintTimer;
     private int aimX;
     private int aimY;
 
@@ -56,6 +59,7 @@ public class GamePanel extends JPanel {
 
         fondo = new ImageIcon(getClass().getResource(BACKGROUND_IMAGE)).getImage();
         ducks = new ArrayList<>();
+        duckThreads = new ArrayList<>();
         scope = new Scope();
 
         addMouseMotionListener(new MouseMotionAdapter() {
@@ -84,12 +88,14 @@ public class GamePanel extends JPanel {
 
         for (Duck duck : ducks) {
             Thread hiloDuck = new Thread(duck);
+            duckThreads.add(hiloDuck);
             hiloDuck.start();
         }
 
         Thread evilThread = new Thread(evilDuck);
+        duckThreads.add(evilThread);
         evilThread.start();
-        Timer evilDuckTimer = new Timer(5000, e -> {
+        evilDuckTimer = new Timer(5000, e -> {
             if (ducks.contains(evilDuck)) {
                 ducks.remove(evilDuck);
                 System.out.println("EvilDuck desapareció");
@@ -101,13 +107,13 @@ public class GamePanel extends JPanel {
         });
         evilDuckTimer.start();
 
-        Timer timer = new Timer(1000 / 60, e -> {
+        repaintTimer = new Timer(1000 / 60, e -> {
             for (Duck duck : ducks) {
                 duck.setPanelSize(getWidth(), getHeight());
             }
             repaint();
         });
-        timer.start();
+        repaintTimer.start();
     }
 
     /**
@@ -186,5 +192,27 @@ public class GamePanel extends JPanel {
      */
     private int clamp(int value, int min, int max) {
         return Math.max(min, Math.min(max, value));
+    }
+
+    /**
+     * Detiene los timers y los hilos de movimiento asociados al panel de juego.
+     */
+    public void stopGame() {
+        if (evilDuckTimer != null) {
+            evilDuckTimer.stop();
+        }
+        if (repaintTimer != null) {
+            repaintTimer.stop();
+        }
+
+        for (Duck duck : ducks) {
+            duck.stop();
+        }
+        evilDuck.stop();
+
+        for (Thread duckThread : duckThreads) {
+            duckThread.interrupt();
+        }
+        duckThreads.clear();
     }
 }

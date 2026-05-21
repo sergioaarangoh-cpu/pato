@@ -1,10 +1,15 @@
 package view;
 
+import model.GameState;
+import util.ScoreManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Panel de game over que se muestra cuando el jugador pierde.
@@ -16,6 +21,11 @@ public class GameOverPanel extends JPanel {
 
     private final Image gameOverImage;
     private final Runnable onReturn;
+    private final Font arcadeFont;
+    private List<ScoreManager.ScoreEntry> topScores;
+    private String playerName;
+    private int score;
+    private int elapsedTime;
     private boolean returned;
 
     /**
@@ -26,6 +36,9 @@ public class GameOverPanel extends JPanel {
     public GameOverPanel(Runnable onReturn) {
         this.onReturn = onReturn;
         this.gameOverImage = loadImage();
+        this.arcadeFont = loadArcadeFont();
+        this.topScores = new ArrayList<>();
+        this.playerName = "";
         setFocusable(true);
         configureReturnActions();
     }
@@ -60,6 +73,27 @@ public class GameOverPanel extends JPanel {
     }
 
     /**
+     * Permite que el panel vuelva a aceptar la accion de retorno al menu.
+     */
+    public void reset() {
+        returned = false;
+    }
+
+    /**
+     * Actualiza la informacion que se muestra al terminar una partida.
+     *
+     * @param gameState estado final de la partida
+     * @param topScores mejores puntajes guardados
+     */
+    public void setGameResult(GameState gameState, List<ScoreManager.ScoreEntry> topScores) {
+        playerName = gameState.getPlayerName();
+        score = gameState.getScore();
+        elapsedTime = gameState.getElapsedTime();
+        this.topScores = new ArrayList<>(topScores);
+        repaint();
+    }
+
+    /**
      * Carga la imagen de game over desde el classpath.
      */
     private Image loadImage() {
@@ -69,6 +103,35 @@ public class GameOverPanel extends JPanel {
             return null;
         }
         return new ImageIcon(url).getImage();
+    }
+
+    /**
+     * Carga la fuente arcade usada para los textos de resultado.
+     *
+     * @return fuente arcade, o una fuente de respaldo si no se puede cargar
+     */
+    private Font loadArcadeFont() {
+        try {
+            return Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    new java.io.File("OldPato\\src\\main\\resources\\fonts\\ARCADE_N.TTF")
+            ).deriveFont(Font.PLAIN, 12f);
+        } catch (Exception e) {
+            System.out.println("Error cargando fuente: " + e.getMessage());
+            return new Font("Arial", Font.BOLD, 12);
+        }
+    }
+
+    /**
+     * Convierte segundos a formato minutos:segundos.
+     *
+     * @param totalSeconds segundos totales
+     * @return tiempo formateado
+     */
+    private String formatTime(int totalSeconds) {
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+        return String.format("%02d:%02d", minutes, seconds);
     }
 
     /**
@@ -84,6 +147,20 @@ public class GameOverPanel extends JPanel {
         } else {
             graphics.setColor(Color.BLACK);
             graphics.fillRect(0, 0, getWidth(), getHeight());
+        }
+
+        graphics.setFont(arcadeFont);
+        graphics.setColor(Color.WHITE);
+        graphics.drawString(playerName, 30, 575);
+        graphics.drawString("Score: " + score, 750, 575);
+        graphics.drawString("Time: " + formatTime(elapsedTime), 30, 300);
+        graphics.drawString("Top 3", 750, 30);
+
+        int y = 50;
+        for (int i = 0; i < topScores.size(); i++) {
+            ScoreManager.ScoreEntry entry = topScores.get(i);
+            graphics.drawString((i + 1) + ". " + entry.getPlayerName() + " " + entry.getScore(), 750, y);
+            y += 20;
         }
     }
 }

@@ -20,6 +20,7 @@ public class Duck extends Entity implements Runnable {
     private int panelHeight;
     private String leftImagePath;
     private String rightImagePath;
+    private volatile boolean running;
 
     /**
      * Crea un pato en una posición inicial.
@@ -61,7 +62,8 @@ public class Duck extends Entity implements Runnable {
      */
     @Override
     public void run() {
-        while (true) {
+        running = true;
+        while (running) {
             move();
             try {
                 Thread.sleep(16);
@@ -103,5 +105,12 @@ public class Duck extends Entity implements Runnable {
     public void setPanelSize(int panelWidth, int panelHeight) {
         this.panelWidth = panelWidth;
         this.panelHeight = panelHeight;
+    }
+
+    /**
+     * Detiene el ciclo de movimiento del pato.
+     */
+    public void stop() {
+        running = false;
     }
 }

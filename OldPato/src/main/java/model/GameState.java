@@ -15,6 +15,7 @@ public class GameState {
     private int lives;
     private int score;
     private int remainingTime;
+    private int elapsedTime;
     private boolean gameOver;
     private String playerName;
 
@@ -25,6 +26,7 @@ public class GameState {
         lives = INITIAL_LIVES;
         score = 0;
         remainingTime = INITIAL_TIMER_SECONDS;
+        elapsedTime = 0;
         gameOver = false;
         playerName = "";
     }
@@ -36,6 +38,7 @@ public class GameState {
         lives = INITIAL_LIVES;
         score = 0;
         remainingTime = INITIAL_TIMER_SECONDS;
+        elapsedTime = 0;
         gameOver = false;
         playerName = "";
     }
@@ -96,5 +99,30 @@ public class GameState {
 
     public void setLives(int lives) {
         this.lives = lives;
+    }
+
+    /**
+     * Recupera una vida sin superar la cantidad inicial.
+     */
+    public void recoverLife() {
+        if (lives < INITIAL_LIVES) {
+            lives++;
+        }
+    }
+
+    /**
+     * Aumenta el tiempo total jugado en un segundo.
+     */
+    public void incrementElapsedTime() {
+        elapsedTime++;
+    }
+
+    /**
+     * Obtiene el tiempo total jugado en segundos.
+     *
+     * @return segundos jugados en la partida actual
+     */
+    public int getElapsedTime() {
+        return elapsedTime;
     }
 }

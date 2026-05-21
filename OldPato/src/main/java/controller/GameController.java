@@ -4,6 +4,7 @@ import model.Duck;
 import model.Duckencia;
 import model.EvilDuck;
 import model.GameState;
+import util.ScoreManager;
 import util.SoundManager;
 import view.GamePanel;
 import view.HUD;
@@ -33,6 +34,8 @@ public class GameController {
     private SoundManager soundManager;
     private Timer countdownTimer;
     private Timer inputTimer;
+    private int evilDuckHits;
+    private boolean scoreSaved;
 
     /**
      * Crea el controller con todo lo necesario.
@@ -63,13 +66,12 @@ public class GameController {
 
         // reduce el tiempo en 1 cada segundo
         countdownTimer = new Timer(1000, e -> {
+            gameState.incrementElapsedTime();
             gameState.setRemainingTime(gameState.getRemainingTime() - 1);
             hud.repaint();
 
             if (gameState.getRemainingTime() <= 0) {
-                gameState.setGameOver(true);
-                screenManager.goToGameOver();
-                countdownTimer.stop();
+                finishGame();
             }
         });
     }
@@ -133,7 +135,10 @@ public class GameController {
         inputTimer.stop();
         countdownTimer.stop();
         gamepadHandler.dispose();
+        gamePanel.stopGame();
         gameState.reset();
+        evilDuckHits = 0;
+        scoreSaved = false;
         screenManager.goToMenu();
     }
 
@@ -166,13 +171,16 @@ public class GameController {
                     soundManager.playSound(DUCKENCIA_SOUND);
                     gameState.setLives(gameState.getLives() - 1);
                     if (gameState.getLives() <= 0) {
-                        gameState.setGameOver(true);
-                        screenManager.goToGameOver();
-                        countdownTimer.stop();
+                        finishGame();
                     }
                 }else if (duck instanceof EvilDuck) {
                     soundManager.playSound(EVIL_DUCK_SOUND);
                     gameState.setRemainingTime(gameState.getRemainingTime() + 20);
+                    evilDuckHits++;
+                    if (evilDuckHits == 3) {
+                        gameState.recoverLife();
+                        evilDuckHits = 0;
+                    }
                 }else {
                     // disparar a un Duck normal suma puntos y tiempo
                     soundManager.playSound(DUCK_SOUND);
@@ -181,5 +189,19 @@ public class GameController {
                 }
             }
         }
+    }
+
+    /**
+     * Termina la partida, guarda el puntaje y muestra la pantalla de game over.
+     */
+    private void finishGame() {
+        gameState.setGameOver(true);
+        countdownTimer.stop();
+        if (!scoreSaved) {
+            ScoreManager.saveScore(gameState.getPlayerName(), gameState.getScore());
+            scoreSaved = true;
+        }
+        hud.repaint();
+        screenManager.goToGameOver();
     }
 }

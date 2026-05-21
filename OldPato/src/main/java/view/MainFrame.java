@@ -5,6 +5,7 @@ import controller.InputHandler;
 import controller.MouseHandler;
 import controller.ScreenManager;
 import model.GameState;
+import util.ScoreManager;
 import util.SoundManager;
 
 import javax.swing.*;
@@ -34,6 +35,7 @@ public class MainFrame extends JFrame {
     private boolean gameStarted;
     private GameController gameController;
     private WelcomePanel welcomePanel;
+    private GameOverPanel gameOverPanel;
 
     /**
      * Crea la ventana principal y registra la pantalla de bienvenida como
@@ -47,7 +49,8 @@ public class MainFrame extends JFrame {
 
         welcomePanel = new WelcomePanel(this::showGamePanel);
         screens.add(welcomePanel, WELCOME_SCREEN);
-        screens.add(new GameOverPanel(this::showWelcomePanel), GAME_OVER_SCREEN);
+        gameOverPanel = new GameOverPanel(this::showWelcomePanel);
+        screens.add(gameOverPanel, GAME_OVER_SCREEN);
 
         add(screens);
 
@@ -122,6 +125,8 @@ public class MainFrame extends JFrame {
         screenManager.setOnGameOver(() -> {
             soundManager.stopMusic();
             soundManager.playSound(LOST_SOUND);
+            gameOverPanel.reset();
+            gameOverPanel.setGameResult(gameState, ScoreManager.getTopScores(3));
             cardLayout.show(screens, GAME_OVER_SCREEN);
             SwingUtilities.invokeLater(() ->
                     screens.getComponent(screens.getComponentCount() - 1).requestFocusInWindow()

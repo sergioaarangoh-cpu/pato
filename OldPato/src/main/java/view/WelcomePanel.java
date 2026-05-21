@@ -18,13 +18,19 @@ import java.util.function.Consumer;
 public class WelcomePanel extends JPanel {
 
     private static final String WELCOME_IMAGE = "OldPato/src/main/resources/images/welcomeScreen.png";
-    private static final String POPUP_IMAGE = "OldPato/src/main/resources/images/background.png";
+    private static final String POPUP_IMAGE = "OldPato/src/main/resources/images/instructions.png";
+    private static final String LOGO_IMAGE = "OldPato/src/main/resources/images/logo_uam.png";
+    private static final String FOOTER_TEXT = "OldPato - por Sergio, Juan Sebastian y Victor - POO";
+    private static final int LOGO_SIZE = 50;
+    private static final int FOOTER_BOTTOM_MARGIN = 12;
 
     private final Image welcomeImage;
     private final Image popupImage;
+    private final Image logoImage;
     private final Consumer<String> onStart;
     private final JTextField nameField;
     private final JLabel errorLabel;
+    private final Font arcadeFont;
     private boolean started;
 
     /**
@@ -36,6 +42,8 @@ public class WelcomePanel extends JPanel {
         this.onStart = onStart;
         this.welcomeImage = loadWelcomeImage();
         this.popupImage = loadImage(POPUP_IMAGE, "/images/background.png");
+        this.logoImage = loadImage(LOGO_IMAGE, "/images/logo_uam.png");
+        this.arcadeFont = loadArcadeFont(10f);
         this.nameField = new JTextField(18);
         this.errorLabel = new JLabel(" ");
         setFocusable(true);
@@ -53,19 +61,9 @@ public class WelcomePanel extends JPanel {
         formPanel.setBackground(new Color(0, 0, 0, 170));
         formPanel.setBorder(BorderFactory.createEmptyBorder(18, 22, 18, 22));
 
-        Font arcadeFont;
-        try {
-            arcadeFont = Font.createFont(
-                    Font.TRUETYPE_FONT,
-                    getClass().getResourceAsStream("/fonts/ARCADE_N.TTF")
-            ).deriveFont(Font.PLAIN, 10f);
-        } catch (Exception e) {
-            System.out.println("Error cargando fuente: " + e.getMessage());
-            arcadeFont = new Font("Arial", Font.BOLD, 10); // fuente de respaldo
-        }
         JLabel nameLabel = new JLabel("Nombre del jugador");
         nameLabel.setForeground(Color.WHITE);
-        nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        nameLabel.setFont(arcadeFont);
 
         nameField.setFont(arcadeFont);
         nameField.setHorizontalAlignment(JTextField.CENTER);
@@ -195,6 +193,24 @@ public class WelcomePanel extends JPanel {
     }
 
     /**
+     * Carga la fuente arcade usada en la pantalla de bienvenida.
+     *
+     * @param size tamano de la fuente
+     * @return fuente arcade, o una fuente de respaldo si no se puede cargar
+     */
+    private Font loadArcadeFont(float size) {
+        try {
+            return Font.createFont(
+                    Font.TRUETYPE_FONT,
+                    new java.io.File("OldPato\\src\\main\\resources\\fonts\\ARCADE_N.TTF")
+            ).deriveFont(Font.PLAIN, size);
+        } catch (Exception e) {
+            System.out.println("Error cargando fuente: " + e.getMessage());
+            return new Font("Arial", Font.BOLD, Math.round(size));
+        }
+    }
+
+    /**
      * Carga una imagen desde archivo local o desde el classpath.
      *
      * @param filePath     ruta del archivo dentro del proyecto
@@ -234,10 +250,20 @@ public class WelcomePanel extends JPanel {
         super.paintComponent(graphics);
         if (welcomeImage != null) {
             graphics.drawImage(welcomeImage, 0, 0, getWidth(), getHeight(), this);
-            return;
+        } else {
+            graphics.setColor(Color.BLACK);
+            graphics.fillRect(0, 0, getWidth(), getHeight());
         }
 
-        graphics.setColor(Color.BLACK);
-        graphics.fillRect(0, 0, getWidth(), getHeight());
+        if (logoImage != null) {
+            graphics.drawImage(logoImage, 0, 0, LOGO_SIZE, LOGO_SIZE, this);
+        }
+
+        graphics.setFont(arcadeFont);
+        graphics.setColor(Color.WHITE);
+        FontMetrics metrics = graphics.getFontMetrics();
+        int footerX = (getWidth() - metrics.stringWidth(FOOTER_TEXT)) / 2;
+        int footerY = getHeight() - FOOTER_BOTTOM_MARGIN;
+        graphics.drawString(FOOTER_TEXT, Math.max(0, footerX), footerY);
     }
 }
