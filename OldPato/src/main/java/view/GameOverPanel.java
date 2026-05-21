@@ -151,15 +151,15 @@ public class GameOverPanel extends JPanel {
 
         graphics.setFont(arcadeFont);
         graphics.setColor(Color.WHITE);
-        graphics.drawString(playerName, 30, 575);
+        graphics.drawString(playerName, 40, 560);
         graphics.drawString("Score: " + score, 750, 575);
-        graphics.drawString("Time: " + formatTime(elapsedTime), 30, 300);
-        graphics.drawString("Top 3", 750, 30);
+        graphics.drawString("Time: " + formatTime(elapsedTime), 40, 580);
+        graphics.drawString("Top 3", 740, 70);
 
-        int y = 50;
+        int y = 90;
         for (int i = 0; i < topScores.size(); i++) {
             ScoreManager.ScoreEntry entry = topScores.get(i);
-            graphics.drawString((i + 1) + ". " + entry.getPlayerName() + " " + entry.getScore(), 750, y);
+            graphics.drawString((i + 1) + ". " + entry.getPlayerName() + " " + entry.getScore(), 740, y);
             y += 20;
         }
     }

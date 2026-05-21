@@ -2,3 +2,11 @@ lolio;230
 jihih;0
 knkkn;10
 jijih;0
+flick;40
+pelio;0
+celio;20
+lolio;20
+lelio;0
+lilio;0
+pilio;0
+vic;10
