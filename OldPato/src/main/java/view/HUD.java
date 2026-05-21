@@ -18,7 +18,7 @@ public class HUD extends JPanel {
     /**
      * Crea el HUD con el Game state (estado actual del juego)
      *
-     * @param gameState
+     * @param gameState estado que se muestra en el HUD
      */
     public HUD(GameState gameState) {
         this.gameState = gameState;

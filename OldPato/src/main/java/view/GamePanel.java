@@ -239,6 +239,9 @@ public class GamePanel extends JPanel {
         return Math.max(min, Math.min(max, value));
     }
 
+    /**
+     * Detiene temporizadores internos del panel antes de abandonar la partida.
+     */
     public void stopGame() {
         if (explosionTimer != null) {
             explosionTimer.stop();

@@ -8,5 +8,23 @@ package model;
  * @version 1.0
  */
 public enum GameScreen {
-    MENU, INSTRUCTIONS, PLAYING, GAME_OVER
+    /**
+     * Pantalla inicial de menu.
+     */
+    MENU,
+
+    /**
+     * Pantalla con instrucciones del juego.
+     */
+    INSTRUCTIONS,
+
+    /**
+     * Pantalla donde ocurre la partida.
+     */
+    PLAYING,
+
+    /**
+     * Pantalla final mostrada al perder.
+     */
+    GAME_OVER
 }

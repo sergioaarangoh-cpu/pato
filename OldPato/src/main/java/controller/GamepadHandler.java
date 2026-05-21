@@ -27,10 +27,19 @@ public class GamepadHandler {
     private boolean shootPressed;
     private boolean previousShootPressed;
 
+    /**
+     * Busca un mando disponible y deja preparado el estado inicial del manejador.
+     */
     public GamepadHandler() {
         findController();
     }
 
+    /**
+     * Actualiza la posicion de la mira y el estado de disparo usando el mando.
+     *
+     * @param panelWidth ancho actual del panel de juego
+     * @param panelHeight alto actual del panel de juego
+     */
     public void update(int panelWidth, int panelHeight) {
         if (!available || controller == null) {
             return;
@@ -58,27 +67,56 @@ public class GamepadHandler {
         shootPressed = readComponent(shootTrigger) > 0.55f || readComponent(shootTriggerButton) > 0.5f;
     }
 
+    /**
+     * Centra la mira dentro del panel de juego.
+     *
+     * @param panelWidth ancho actual del panel de juego
+     * @param panelHeight alto actual del panel de juego
+     */
     public void centerAim(int panelWidth, int panelHeight) {
         aimX = Math.max(0, panelWidth / 2);
         aimY = Math.max(0, panelHeight / 2);
     }
 
+    /**
+     * Indica si hay un mando compatible disponible.
+     *
+     * @return {@code true} si el mando esta disponible
+     */
     public boolean isAvailable() {
         return available;
     }
 
+    /**
+     * Obtiene la coordenada horizontal de la mira controlada por mando.
+     *
+     * @return coordenada x de la mira
+     */
     public int getAimX() {
         return aimX;
     }
 
+    /**
+     * Obtiene la coordenada vertical de la mira controlada por mando.
+     *
+     * @return coordenada y de la mira
+     */
     public int getAimY() {
         return aimY;
     }
 
+    /**
+     * Detecta si el disparo del mando acaba de ser presionado.
+     *
+     * @return {@code true} solo en el primer ciclo del disparo
+     */
     public boolean wasShootPressed() {
         return shootPressed && !previousShootPressed;
     }
 
+    /**
+     * Libera las referencias al mando y marca el manejador como no disponible.
+     */
     public void dispose() {
         controller = null;
         xAxis = null;

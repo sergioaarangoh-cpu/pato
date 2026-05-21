@@ -15,7 +15,7 @@ public class InputHandler extends KeyAdapter {
 
     /**
      *Método que se ejecuta automáticamente cuando el jugador presiona una tecla
-     * @param e
+     * @param e evento de teclado recibido
      */
     @Override
     public void keyPressed(KeyEvent e) {
@@ -26,7 +26,7 @@ public class InputHandler extends KeyAdapter {
 
     /**
      * Método que se ejecuta automáticamente cuando el jugador suelta una tecla
-     * @param e
+     * @param e evento de teclado recibido
      */
     @Override
     public void keyReleased (KeyEvent e) {
@@ -37,7 +37,7 @@ public class InputHandler extends KeyAdapter {
 
     /**
      * Getter para enterPressed()
-     * @return
+     * @return {@code true} si Enter esta presionado
      */
     public boolean isEnterPressed() {
         return enterPressed;
@@ -45,7 +45,7 @@ public class InputHandler extends KeyAdapter {
 
     /**
      * Getter para escapePressed()
-     * @return
+     * @return {@code true} si Escape esta presionado
      */
     public boolean isEscapePressed() {
         return escapePressed;

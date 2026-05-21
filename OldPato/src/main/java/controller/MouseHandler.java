@@ -72,7 +72,24 @@ public class MouseHandler extends MouseAdapter {
         mouseY = e.getY();
     }
 
+    /**
+     * Indica si el jugador mantiene presionado el disparo.
+     *
+     * @return {@code true} si el mouse esta disparando
+     */
     public boolean isShooting() { return shooting; }
+
+    /**
+     * Obtiene la coordenada horizontal actual del mouse.
+     *
+     * @return coordenada x del mouse
+     */
     public int getMouseX() { return mouseX; }
+
+    /**
+     * Obtiene la coordenada vertical actual del mouse.
+     *
+     * @return coordenada y del mouse
+     */
     public int getMouseY() { return mouseY; }
 }

@@ -176,7 +176,7 @@ public class GameController {
                     }
                 } else if (duck instanceof EvilDuck) {
                     soundManager.playSound(EVIL_DUCK_SOUND);
-                    gameState.setRemainingTime(gameState.getRemainingTime() + 20);
+                    gameState.setRemainingTime(gameState.getRemainingTime() + 5);
                     evilDuckHits++;
                     if (evilDuckHits == 3) {
                         gameState.recoverLife();

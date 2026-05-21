@@ -51,8 +51,9 @@ public class GameState {
     }
 
     /**
-     * Establece si el juego ha terminada
-     * @param gameOver
+     * Establece si el juego ha terminado.
+     *
+     * @param gameOver {@code true} si la partida debe marcarse como terminada
      */
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
@@ -77,26 +78,56 @@ public class GameState {
         this.playerName = playerName == null ? "" : playerName.trim();
     }
 
+    /**
+     * Obtiene el tiempo restante de la partida.
+     *
+     * @return segundos restantes
+     */
     public int getRemainingTime() {
         return remainingTime;
     }
 
+    /**
+     * Define el tiempo restante de la partida.
+     *
+     * @param remainingTime segundos restantes
+     */
     public void setRemainingTime(int remainingTime) {
         this.remainingTime = remainingTime;
     }
 
+    /**
+     * Obtiene el puntaje acumulado.
+     *
+     * @return puntaje actual
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * Define el puntaje acumulado.
+     *
+     * @param score nuevo puntaje
+     */
     public void setScore(int score) {
         this.score = score;
     }
 
+    /**
+     * Obtiene la cantidad de vidas restantes.
+     *
+     * @return vidas actuales
+     */
     public int getLives() {
         return lives;
     }
 
+    /**
+     * Define la cantidad de vidas restantes.
+     *
+     * @param lives nueva cantidad de vidas
+     */
     public void setLives(int lives) {
         this.lives = lives;
     }
