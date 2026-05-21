@@ -1,4 +1,4 @@
-# OldPato 🦆
+# OldPato 
 ![Background](.github/screenshots/background_readme.png)
 Un juego de disparos estilo feria desarrollado en Java con Swing, inspirado en el clásico juego de matar patos.
 El pato más old de todos los patos llega a tu portátil éste 2026!
@@ -13,9 +13,9 @@ El jugador controla una mira en la pantalla y debe disparar a los patos que vuel
 ## Tipos de patos
 | Pato | Efecto al disparar |
 |---|---|
-| 🦆 Duck | +10 puntos y +5 segundos, molestos patos que hacen cuac en el parque |
-| 😇 Duckencia | -1 vida, por qué le dispararías a esta bella patica? |
-| 😈 EvilDuck | +20 segundos, muere patito feo |
+|  Duck | +10 puntos y +5 segundos, molestos patos que hacen cuac en el parque |
+|  Duckencia | -1 vida, por qué le dispararías a esta bella patica? |
+|  EvilDuck | +20 segundos, muere patito feo |
 
 ## Mecánicas de juego
 - **Vidas:** 5 vidas iniciales. Se pierde una vida cada vez que se le dispara a una Duckencia.
@@ -33,7 +33,7 @@ El jugador controla una mira en la pantalla y debe disparar a los patos que vuel
 | Iniciar juego | Enter o clic |
 | Volver al menú | Escape |
 
-> 🎮 El soporte para mando usa JInput. Agrega manualmente los jars en IntelliJ (`Project Structure > Modules > Dependencies`):
+>  El soporte para mando usa JInput. Agrega manualmente los jars en IntelliJ (`Project Structure > Modules > Dependencies`):
 > - `jinput-2.0.10.jar`
 > - `jinput-2.0.10-natives-all.jar` (o el nativo de tu sistema operativo)
 
@@ -55,7 +55,7 @@ MVC + principios SOLID, en particular:
 - **DIP** (Dependency Inversion Principle): las clases de alto nivel dependen de abstracciones.
 
 ## Estado del proyecto
-⚠️ En desarrollo.
+ En desarrollo.
 
 ## Autores
 Sergio Arango — [@sergioaarangoh-cpu](https://github.com/sergioaarangoh-cpu)
