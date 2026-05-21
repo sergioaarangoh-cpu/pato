@@ -12,7 +12,7 @@ import java.net.URL;
  */
 public class Duck extends Entity implements Runnable {
 
-    private static final int DUCK_SIZE = 120;
+    private static final int DUCK_SIZE = 90;
 
     private int speedX;
     private int speedY;

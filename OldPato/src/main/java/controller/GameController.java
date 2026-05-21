@@ -173,7 +173,7 @@ public class GameController {
                     if (gameState.getLives() <= 0) {
                         finishGame();
                     }
-                }else if (duck instanceof EvilDuck) {
+                } else if (duck instanceof EvilDuck) {
                     soundManager.playSound(EVIL_DUCK_SOUND);
                     gameState.setRemainingTime(gameState.getRemainingTime() + 20);
                     evilDuckHits++;
@@ -181,7 +181,7 @@ public class GameController {
                         gameState.recoverLife();
                         evilDuckHits = 0;
                     }
-                }else {
+                } else {
                     // disparar a un Duck normal suma puntos y tiempo
                     soundManager.playSound(DUCK_SOUND);
                     gameState.setScore(gameState.getScore() + 10);
