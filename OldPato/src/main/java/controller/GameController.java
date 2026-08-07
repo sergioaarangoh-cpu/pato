@@ -10,6 +10,8 @@ import view.GamePanel;
 import view.HUD;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Controla el estado de toda la partida integrando todas sus partes: input, gamestate y lo propio del paquete view
@@ -22,7 +24,7 @@ public class GameController {
     private static final String GUNSHOT_SOUND = "/sounds/gunshot.wav";
     private static final String DUCK_SOUND = "/sounds/duck1.wav";
     private static final String DUCKENCIA_SOUND = "/sounds/duckencia.wav";
-    private static final String EVIL_DUCK_SOUND = "/sounds/evilduck.wav";
+    private static final String POWERUP_SOUND = "/sounds/powerup.wav";
 
     private GameState gameState;
     private GamePanel gamePanel;
@@ -163,32 +165,37 @@ public class GameController {
         soundManager.playSound(GUNSHOT_SOUND);
         gamePanel.showExplosionAt(mx, my);
 
+        List<Duck> hitDucks = new ArrayList<>();
         for (Duck duck : gamePanel.getDucks()) {
             if (mx >= duck.getX() && mx <= duck.getX() + 120 &&
                     my >= duck.getY() && my <= duck.getY() + 120) {
-
-                if (duck instanceof Duckencia) {
-                    // disparar a un Duckencia quita una vida
-                    soundManager.playSound(DUCKENCIA_SOUND);
-                    gameState.setLives(gameState.getLives() - 1);
-                    if (gameState.getLives() <= 0) {
-                        finishGame();
-                    }
-                } else if (duck instanceof EvilDuck) {
-                    soundManager.playSound(EVIL_DUCK_SOUND);
-                    gameState.setRemainingTime(gameState.getRemainingTime() + 5);
-                    evilDuckHits++;
-                    if (evilDuckHits == 3) {
-                        gameState.recoverLife();
-                        evilDuckHits = 0;
-                    }
-                } else {
-                    // disparar a un Duck normal suma puntos y tiempo
-                    soundManager.playSound(DUCK_SOUND);
-                    gameState.setScore(gameState.getScore() + 10);
-                    gameState.setRemainingTime(gameState.getRemainingTime() + 1);
-                }
+                hitDucks.add(duck);
             }
+        }
+
+        for (Duck duck : hitDucks) {
+            if (duck instanceof Duckencia) {
+                // disparar a un Duckencia quita una vida
+                soundManager.playSound(DUCKENCIA_SOUND);
+                gameState.setLives(gameState.getLives() - 1);
+                if (gameState.getLives() <= 0) {
+                    finishGame();
+                }
+            } else if (duck instanceof EvilDuck) {
+                soundManager.playSound(POWERUP_SOUND);
+                gameState.setRemainingTime(gameState.getRemainingTime() + 5);
+                evilDuckHits++;
+                if (evilDuckHits == 3) {
+                    gameState.recoverLife();
+                    evilDuckHits = 0;
+                }
+            } else {
+                // disparar a un Duck normal suma puntos y tiempo
+                soundManager.playSound(DUCK_SOUND);
+                gameState.setScore(gameState.getScore() + 10);
+                gameState.setRemainingTime(gameState.getRemainingTime() + 1);
+            }
+            gamePanel.removeDuck(duck);
         }
     }
 

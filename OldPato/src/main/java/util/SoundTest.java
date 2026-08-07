@@ -15,7 +15,7 @@ public class SoundTest {
      */
     public static void main(String[] args) throws Exception {
         AudioInputStream audio = AudioSystem.getAudioInputStream(
-                new File("pato/OldPato/src/main/resources/sounds/welcomeMusic.wav")
+                new File("pato/OldPato/src/main/resources/sounds/powerup.wav")
         );
 
         AudioInputStream audio2 = AudioSystem.getAudioInputStream(

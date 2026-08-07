@@ -13,6 +13,9 @@ import java.net.URL;
 public class Duck extends Entity implements Runnable {
 
     private static final int DUCK_SIZE = 90;
+    private static final int DEFAULT_LIFETIME_MS = 6000;
+    private static final int BLINK_WARNING_MS = 2000;
+    private static final int BLINK_INTERVAL_MS = 150;
 
     private int speedX;
     private int speedY;
@@ -21,6 +24,10 @@ public class Duck extends Entity implements Runnable {
     private String leftImagePath;
     private String rightImagePath;
     private volatile boolean running;
+    private final long spawnTimestamp;
+    private int lifetimeMs;
+    protected boolean blinkEnabled;
+    private double speedMultiplier = 1.0;
 
     /**
      * Crea un pato en una posición inicial.
@@ -38,8 +45,11 @@ public class Duck extends Entity implements Runnable {
         this.panelHeight = panelHeight;
         this.leftImagePath = leftImage;
         this.rightImagePath = rightImage;
-        this.speedX = 7;
-        this.speedY = 5;
+        this.speedX = 4;
+        this.speedY = 3;
+        this.spawnTimestamp = System.currentTimeMillis();
+        this.lifetimeMs = DEFAULT_LIFETIME_MS;
+        this.blinkEnabled = true;
     }
 
     /**
@@ -78,20 +88,20 @@ public class Duck extends Entity implements Runnable {
      * Mueve el pato y cambia su sprite según la dirección horizontal.
      */
     protected void move() {
-        x += speedX;
-        y += speedY;
+        x += (int) Math.round(speedX * speedMultiplier);
+        y += (int) Math.round(speedY * speedMultiplier);
 
         if (x <= 0) {
             speedX *= -1;
             sprite = loadSprite(rightImagePath);
         }
 
-        if (x >= panelWidth - DUCK_SIZE) {
+        if (x >= panelWidth - width) {
             speedX *= -1;
             sprite = loadSprite(leftImagePath);
         }
 
-        if (y <= 0 || y >= panelHeight - DUCK_SIZE) {
+        if (y <= 0 || y >= panelHeight - height) {
             speedY *= -1;
         }
     }
@@ -105,6 +115,72 @@ public class Duck extends Entity implements Runnable {
     public void setPanelSize(int panelWidth, int panelHeight) {
         this.panelWidth = panelWidth;
         this.panelHeight = panelHeight;
+    }
+
+    /**
+     * Define la velocidad inicial del pato al entrar en pantalla.
+     *
+     * @param speedX velocidad horizontal
+     * @param speedY velocidad vertical
+     */
+    public void setSpeed(int speedX, int speedY) {
+        this.speedX = speedX;
+        this.speedY = speedY;
+    }
+
+    /**
+     * Escala la velocidad de movimiento sin alterar la logica de rebote.
+     * Usado por el frenzy mode para acelerar temporalmente a los patos.
+     *
+     * @param speedMultiplier factor de velocidad, 1.0 es la velocidad normal
+     */
+    public void setSpeedMultiplier(double speedMultiplier) {
+        this.speedMultiplier = speedMultiplier;
+    }
+
+    /**
+     * Define cuanto tiempo permanece el pato en pantalla antes de desaparecer.
+     *
+     * @param lifetimeMs tiempo de vida en milisegundos
+     */
+    public void setLifetime(int lifetimeMs) {
+        this.lifetimeMs = lifetimeMs;
+    }
+
+    /**
+     * Verifica si ya se cumplio el tiempo de vida del pato.
+     *
+     * @return true si el pato debe desaparecer
+     */
+    public boolean isExpired() {
+        return System.currentTimeMillis() - spawnTimestamp >= lifetimeMs;
+    }
+
+    /**
+     * Dibuja el pato, aplicando titileo durante los ultimos instantes de su vida.
+     *
+     * @param graphics contexto grafico usado por Swing
+     */
+    @Override
+    public void draw(Graphics graphics) {
+        if (blinkEnabled && isBlinkedOut()) {
+            return;
+        }
+        super.draw(graphics);
+    }
+
+    /**
+     * Determina si, en este instante, el pato debe omitirse del dibujo para simular titileo.
+     *
+     * @return true si el pato esta en su fase "apagada" del titileo
+     */
+    private boolean isBlinkedOut() {
+        long elapsed = System.currentTimeMillis() - spawnTimestamp;
+        long remaining = lifetimeMs - elapsed;
+        if (remaining > BLINK_WARNING_MS || remaining <= 0) {
+            return false;
+        }
+        return (elapsed / BLINK_INTERVAL_MS) % 2 != 0;
     }
 
     /**

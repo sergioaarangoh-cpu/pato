@@ -14,6 +14,7 @@ public class SoundManager {
 
     // clips de música en loop
     private Clip musicClip;
+    private String currentMusicPath;
 
     /**
      * Reproduce una música en loop de forma continua.
@@ -22,6 +23,29 @@ public class SoundManager {
      * @param path ruta del archivo de audio en resources
      */
     public void playMusic(String path) {
+        currentMusicPath = path;
+        playMusicAtSpeed(path, 1.0f);
+    }
+
+    /**
+     * Cambia la velocidad de reproduccion de la musica actual, reinterpretando
+     * el sample rate del audio (sube tempo y tono a la vez, sin necesitar otro clip).
+     *
+     * @param speedFactor factor de velocidad, 1.0 es la velocidad normal
+     */
+    public void setMusicSpeed(float speedFactor) {
+        if (currentMusicPath != null) {
+            playMusicAtSpeed(currentMusicPath, speedFactor);
+        }
+    }
+
+    /**
+     * Reproduce en loop el audio indicado a la velocidad dada.
+     *
+     * @param path        ruta del archivo de audio en resources
+     * @param speedFactor factor de velocidad, 1.0 es la velocidad normal
+     */
+    private void playMusicAtSpeed(String path, float speedFactor) {
         stopMusic();
         try {
             URL url = getClass().getResource(path);
@@ -29,9 +53,20 @@ public class SoundManager {
                 System.out.println("No se encontró el audio: " + path);
                 return;
             }
-            AudioInputStream audio = AudioSystem.getAudioInputStream(url);
+            AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
+            AudioFormat baseFormat = audioIn.getFormat();
+            byte[] audioBytes = audioIn.readAllBytes();
+
+            AudioFormat playbackFormat = new AudioFormat(
+                    baseFormat.getSampleRate() * speedFactor,
+                    baseFormat.getSampleSizeInBits(),
+                    baseFormat.getChannels(),
+                    baseFormat.getEncoding() == AudioFormat.Encoding.PCM_SIGNED,
+                    baseFormat.isBigEndian()
+            );
+
             musicClip = AudioSystem.getClip();
-            musicClip.open(audio);
+            musicClip.open(playbackFormat, audioBytes, 0, audioBytes.length);
             musicClip.loop(Clip.LOOP_CONTINUOUSLY);
             musicClip.start();
         } catch (Exception e) {

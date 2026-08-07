@@ -23,5 +23,6 @@ public class EvilDuck extends Duck {
         super(x, y, panelWidth, panelHeight, leftImage, rightImage);
         this.width = 70;
         this.height = 70;
+        this.blinkEnabled = false;
     }
 }
