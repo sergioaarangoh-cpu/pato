@@ -62,7 +62,12 @@ public class MainFrame extends JFrame {
         setVisible(true);
 
         // suena al abrir el programa y cuando termina arranca la música del menú
-        soundManager.playSound(START_SOUND, () -> soundManager.playMusic(WELCOME_MUSIC));
+        // (solo si el jugador no alcanzó a iniciar la partida mientras sonaba)
+        soundManager.playSound(START_SOUND, () -> {
+            if (!gameStarted) {
+                soundManager.playMusic(WELCOME_MUSIC);
+            }
+        });
         SwingUtilities.invokeLater(welcomePanel::requestNameFocus);
     }
 

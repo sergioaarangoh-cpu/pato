@@ -113,7 +113,7 @@ public class GameOverPanel extends JPanel {
         try {
             return Font.createFont(
                     Font.TRUETYPE_FONT,
-                    new java.io.File("OldPato\\src\\main\\resources\\fonts\\ARCADE_N.TTF")
+                    getClass().getResourceAsStream("/fonts/ARCADE_N.TTF")
             ).deriveFont(Font.PLAIN, 12f);
         } catch (Exception e) {
             System.out.println("Error cargando fuente: " + e.getMessage());

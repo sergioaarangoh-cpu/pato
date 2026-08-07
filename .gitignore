@@ -20,6 +20,13 @@ target/
 *.zip
 *.tar.gz
 *.rar
+!dist/*.zip
+
+# Maven shade plugin artifact
+dependency-reduced-pom.xml
+
+# jpackage build output (only the distributable zip is tracked)
+dist/OldPato/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*

@@ -4,7 +4,7 @@ package model;
  * Mira que representa el punto de apuntado del jugador.
  */
 public class Scope extends Entity {
-    private static final String SCOPE_IMAGE = "OldPato\\src\\main\\resources\\images\\scope.png";
+    private static final String SCOPE_IMAGE = "/images/scope.png";
     private static final int SCOPE_SIZE = 50;
 
     /**

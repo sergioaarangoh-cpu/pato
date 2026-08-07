@@ -14,7 +14,8 @@ public class SoundManager {
 
     // clips de música en loop
     private Clip musicClip;
-    private String currentMusicPath;
+    private volatile String currentMusicPath;
+    private volatile long musicRequestId;
 
     /**
      * Reproduce una música en loop de forma continua.
@@ -40,13 +41,21 @@ public class SoundManager {
     }
 
     /**
-     * Reproduce en loop el audio indicado a la velocidad dada.
+     * Reproduce en loop el audio indicado a la velocidad dada. La carga del
+     * archivo (potencialmente pesada) se hace en un hilo aparte para no
+     * congelar la interfaz, y descarta el resultado si mientras tanto se pidió
+     * reproducir otra pista distinta.
      *
      * @param path        ruta del archivo de audio en resources
      * @param speedFactor factor de velocidad, 1.0 es la velocidad normal
      */
     private void playMusicAtSpeed(String path, float speedFactor) {
-        stopMusic();
+        long requestId = ++musicRequestId;
+        stopClip();
+        new Thread(() -> loadAndPlayMusic(path, speedFactor, requestId), "music-loader").start();
+    }
+
+    private synchronized void loadAndPlayMusic(String path, float speedFactor, long requestId) {
         try {
             URL url = getClass().getResource(path);
             if (url == null) {
@@ -65,8 +74,20 @@ public class SoundManager {
                     baseFormat.isBigEndian()
             );
 
-            musicClip = AudioSystem.getClip();
-            musicClip.open(playbackFormat, audioBytes, 0, audioBytes.length);
+            // si mientras se cargaba se pidió otra música (o se detuvo), se descarta esta
+            if (requestId != musicRequestId) {
+                return;
+            }
+
+            Clip clip = AudioSystem.getClip();
+            clip.open(playbackFormat, audioBytes, 0, audioBytes.length);
+
+            if (requestId != musicRequestId) {
+                clip.close();
+                return;
+            }
+
+            musicClip = clip;
             musicClip.loop(Clip.LOOP_CONTINUOUSLY);
             musicClip.start();
         } catch (Exception e) {
@@ -75,9 +96,17 @@ public class SoundManager {
     }
 
     /**
-     * Detiene la música actual.
+     * Detiene la música actual e invalida cualquier carga pendiente.
      */
-    public void stopMusic() {
+    public synchronized void stopMusic() {
+        musicRequestId++;
+        stopClip();
+    }
+
+    /**
+     * Detiene y libera el clip en reproducción, sin invalidar solicitudes pendientes.
+     */
+    private synchronized void stopClip() {
         if (musicClip != null) {
             musicClip.stop();
             musicClip.close();

@@ -1,5 +1,6 @@
 package util;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -12,7 +13,8 @@ import java.util.List;
 public final class ScoreManager {
 
     private static final String SCORE_FILE_PATH =
-            "OldPato/src/main/resources/data/scores.txt";
+            System.getProperty("user.home") + File.separator
+                    + ".oldpato" + File.separator + "scores.txt";
 
     private static final String FIELD_SEPARATOR = ";";
 
